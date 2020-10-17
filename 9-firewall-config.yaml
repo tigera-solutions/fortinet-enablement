@@ -1,0 +1,44 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: tigera-firewall-controller
+---
+apiVersion: projectcalico.org/v3
+kind: Tier
+metadata:
+  name: fortinet
+spec:
+  order: 900
+---
+# Configuration of Tigera Firewall Controller
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: tigera-firewall-controller-configs
+  namespace: tigera-firewall-controller
+data:
+  # FortiGate device information
+  tigera.firewall.policy.selector: fortinet
+  tigera.firewall.addressSelection: node
+  tigera.firewall.fortigate: |
+    - name: prod-east1
+      ip: 1.2.3.1
+      apikey: 
+        secretKeyRef:
+          name: fortigate-east1
+          key: apikey-fortigate-east1
+    - name: prod-east2
+      ip: 1.2.3.2 
+      apikey: 
+        secretKeyRef:
+          name: fortigate-east2
+          key: apikey-fortigate-east2
+  tigera.firewall.fortimgr: |
+    - name: prod-east1
+      ip: 1.2.4.1
+      username: api_user
+      adom: root
+      password:
+        secretKeyRef:
+          name: fortimgr-east1
+          key: pwd-fortimgr-east1
