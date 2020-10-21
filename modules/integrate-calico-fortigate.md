@@ -1,8 +1,9 @@
-## Module 4: Integrating Calico Enterprise with FortiGate
+# Module 8: Integrating Calico Enterprise with FortiGate
 
 Goal: Integrate Calico Enterprise with FortiGate this will enable you to use Calico Enterprise network policy to control traffic from Kubernetes clusters in your FortiGate firewalls.
 
 ### How the integration works
+
 The Calico Enterprise integration controller (tigera-firewall-controller) lets you manage FortiGate firewall address group objects dynamically, based on Calico Enterprise GlobalNetworkPolicy.
 
 You determine the Kubernetes pods that you want to allow access outside the firewall, and create Calico Enterprise global network policy using selectors that match those pods. After you deploy the tigera firewall controller in the Kubernetes cluster, you create a ConfigMap with the Fortinet firewall information. The Calico Enterprise controller reads the ConfigMap, gets FortiGate firewall IP address, API token and source IP address selection, it can be either node or pod.
@@ -23,7 +24,6 @@ c. Create a REST API Administrator and associate this user with the `tigera_api_
 
 d. Note the API key.
 
-
 2. **Configure FortiManager to communicate with firewall controller** 
 
 a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
@@ -36,20 +36,13 @@ Note username and password.
 
 3. **Configure Calico Enterprise**
 
-a. From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager and FortiGate PRIVATE IPs in [this](../9-firewall-config.yaml) ConfigMap then apply it. 
+a. From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager and FortiGate PRIVATE IPs in [this](../4-firewall-config.yaml) ConfigMap then apply it. 
 
 ```
 kind: Namespace
 apiVersion: v1
 metadata:
   name: tigera-firewall-controller
----
-apiVersion: projectcalico.org/v3
-kind: Tier
-metadata:
-  name: fortinet
-spec:
-  order: 900
 ---
 # Configuration of Tigera Firewall Controller
 kind: ConfigMap
@@ -84,7 +77,6 @@ Then you can apply it:
 ```
 $ kubectl apply -f 9-firewall-config.yaml
 ```
-
 
 4. **Create FortiGate and FortiManager API User and Key as Kubernetes Secrets.**
 

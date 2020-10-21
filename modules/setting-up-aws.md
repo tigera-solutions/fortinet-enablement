@@ -1,4 +1,4 @@
-### Module 1: Setting up your AWS Environment
+# Module 2: Creating Your AWS Environment with Terraform
 
 Goal: this module sets up your AWS environment using Terraform. 
 
@@ -24,17 +24,17 @@ Goal: this module sets up your AWS environment using Terraform.
     public_key_path = "~/.ssh/mykey.pub"
     ```
 
-3. Ensure that the correct AMI for your region is present in `variables.tf`. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching 
+3. Ensure that the correct AMI for your region is present in `terrafrom.tfvars` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly.
 
     ```
         # Ubuntu 20.04 LTS (x64)
         variable "aws_amis" {
         default = {
-            us-east-2 = "ami-0ea76fa632cdbbeee"
             us-west-2 = "ami-01a5f3ee4a9903e77"
         }
         }
     ```
+
 4. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances.
 
     ```
@@ -48,7 +48,13 @@ Apply complete! Resources: 0 added, 9 changed, 0 destroyed.
 
 Outputs:
 
-master-ip = 54.200.135.157
-worker-1-ip = 34.208.55.14
-worker-2-ip = 54.185.9.73
+FGTPublicIP = 52.26.x.x
+FortiGate-Password = i-xxxxx
+FortiGatePassword = i-xxxxxxx
+FortiManagerUsername = admin
+FortigateUsername = admin
+master-ip = 10.99.1.x
+worker-1-ip = 10.99.1.x
+worker-2-ip = 10.99.1.x
+jumpbox-ip = 52.26.x.x
 ```

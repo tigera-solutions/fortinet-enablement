@@ -1,4 +1,4 @@
-## Module 3: Installing Calico Enterprise
+# Module 6: Installing Calico Enterprise
 
 Goal: Install and Configure Calico Enterprise on your K8s Cluster.
 
@@ -9,7 +9,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 1. The first step is to set up cloud storage for Calico Enterprise. Since we're running on AWS, we can use [the following](./2-ebs-storageclass.yaml) EBS Storage Class. You have to create the following configuration from the `master` node.
 
   ```
-  $ cat ebs-storage-class.yaml 
+  $ cat 2-ebs-storage-class.yaml 
   apiVersion: storage.k8s.io/v1
   kind: StorageClass
   metadata:
@@ -23,7 +23,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
   volumeBindingMode: WaitForFirstConsumer
 
 
-  $ kubectl create -f ebs-storage-class.yaml 
+  $ kubectl create -f 2-ebs-storage-class.yaml 
   storageclass.storage.k8s.io/tigera-elasticsearch created
   ```
 
@@ -75,7 +75,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 7. It's time now to expose Calico Enterprise UI externally using [this](./loadbalancer.yaml) `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP. 
 
   ```
-  $ cat loadbalancer.yaml 
+  $ cat 3-loadbalancer.yaml 
   kind: Service
   apiVersion: v1
   metadata:
@@ -91,7 +91,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
       targetPort: 9443
       protocol: TCP
 
-  $ kubectl create -f loadbalancer.yaml 
+  $ kubectl create -f 3-loadbalancer.yaml 
   service/tigera-manager-external created
 
   ```

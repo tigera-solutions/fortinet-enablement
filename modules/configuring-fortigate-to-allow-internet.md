@@ -1,4 +1,4 @@
-## Module 2: Configurating your Fortigate Firewall to allow internet traffic for the K8s Cluster
+# Module 3: Configurating your Fortigate Firewall to allow internet traffic for the K8s Cluster
 
 Goal: In this step, you will configure FortiGate firewall.
 

@@ -57,7 +57,6 @@ resource "aws_internet_gateway" "fortinet-calico-igw" {
 // Route Table
 resource "aws_route_table" "fortinet-calico-public-rt" {
   vpc_id = aws_vpc.fortinet-calico-vpc.id
-
   tags = {
     Name = "fortinet-calico-public-rt"
   }
@@ -65,7 +64,6 @@ resource "aws_route_table" "fortinet-calico-public-rt" {
 
 resource "aws_route_table" "fortinet-calico-private-rt" {
   vpc_id = aws_vpc.fortinet-calico-vpc.id
-
   tags = {
     Name = "fortinet-calico-private-rt"
   }
@@ -106,7 +104,7 @@ resource "aws_eip" "FGTPublicIP" {
 resource "aws_eip" "FMRPublicIP" {
   depends_on        = [aws_instance.fgtvm]
   vpc               = true
-  network_interface = aws_network_interface.fmr_eth0.id
+  network_interface = aws_network_interface.fmrvm_eth0.id
 }
 
 # Our default security group
@@ -173,13 +171,8 @@ resource "aws_instance" "master" {
   # Lookup the correct AMI based on the region
   # we specified
   ami = var.aws_amis[var.aws_region]
-  # The name of our SSH keypair we created above.
   key_name = aws_key_pair.auth.id
-  # Our Security group to allow HTTP and SSH access
   vpc_security_group_ids = [aws_security_group.default.id]
-  # We're going to launch into the same subnet as our ELB. In a production
-  # environment it's more common to have a separate private subnet for
-  # backend instances.
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
   ebs_block_device {
@@ -197,19 +190,9 @@ resource "aws_instance" "worker-1" {
 
   instance_type = "t3.xlarge"
   source_dest_check = false 
-  # Lookup the correct AMI based on the region
-  # we specified
   ami = var.aws_amis[var.aws_region]
-
-  # The name of our SSH keypair we created above.
   key_name = aws_key_pair.auth.id
-
-  # Our Security group to allow HTTP and SSH access
   vpc_security_group_ids = [aws_security_group.default.id]
-
-  # We're going to launch into the same subnet as our ELB. In a production
-  # environment it's more common to have a separate private subnet for
-  # backend instances.
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
   ebs_block_device {
@@ -226,17 +209,9 @@ resource "aws_instance" "worker-1" {
 resource "aws_instance" "worker-2" {
   instance_type = "t3.xlarge"
   source_dest_check = false 
-  # Lookup the correct AMI based on the region
-  # we specified
   ami = var.aws_amis[var.aws_region]
-  # The name of our SSH keypair we created above.
   key_name = aws_key_pair.auth.id
-  # Our Security group to allow HTTP and SSH access
   vpc_security_group_ids = [aws_security_group.default.id]
-
-  # We're going to launch into the same subnet as our ELB. In a production
-  # environment it's more common to have a separate private subnet for
-  # backend instances.
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
   ebs_block_device {
@@ -259,19 +234,9 @@ resource "aws_instance" "jumpbox" {
 
   instance_type = "t3.medium"
   source_dest_check = false 
-  # Lookup the correct AMI based on the region
-  # we specified
   ami = var.aws_amis[var.aws_region]
-
-  # The name of our SSH keypair we created above.
   key_name = aws_key_pair.auth.id
-
-  # Our Security group to allow HTTP and SSH access
   vpc_security_group_ids = [aws_security_group.default.id]
-
-  # We're going to launch into the same subnet as our ELB. In a production
-  # environment it's more common to have a separate private subnet for
-  # backend instances.
   subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
 
   ebs_block_device {
@@ -281,8 +246,13 @@ resource "aws_instance" "jumpbox" {
   }
 
   provisioner "file" {
-    source      = "0-install-kubeadm.sh"
-    destination = "/home/calico-fortinet/0-install-kubeadm.sh"
+    source      = "configs"
+    destination = "/home/calico-fortinet/configs"
+  }
+
+  provisioner "file" {
+    source      = "demo"
+    destination = "/home/calico-fortinet/demo"
   }
 
   tags = {
@@ -302,13 +272,13 @@ resource "aws_network_interface" "fmrvm_eth1" {
   subnet_id         = aws_subnet.fortinet-calico-pvt-subnet.id
   source_dest_check = false
 }
-resource "aws_network_interface_sg_attachment" "publicattachment" {
-  depends_on           = [aws_network_interface.eth0]
+resource "aws_network_interface_sg_attachment" "fmrpublicattachment" {
+  depends_on           = [aws_network_interface.fmrvm_eth0]
   security_group_id    = aws_security_group.default.id
   network_interface_id = aws_network_interface.fmrvm_eth0.id
 }
-resource "aws_network_interface_sg_attachment" "internalattachment" {
-  depends_on           = [aws_network_interface.eth1]
+resource "aws_network_interface_sg_attachment" "fmrinternalattachment" {
+  depends_on           = [aws_network_interface.fmrvm_eth1]
   security_group_id    = aws_security_group.default.id
   network_interface_id = aws_network_interface.fmrvm_eth1.id
 }
@@ -318,7 +288,6 @@ resource "aws_instance" "fmrvm" {
   instance_type     = var.size
   availability_zone = var.az1
   key_name          = aws_key_pair.auth.id
-  #user_data         = data.template_file.FortiGate.rendered
 
   root_block_device {
     volume_type = "standard"

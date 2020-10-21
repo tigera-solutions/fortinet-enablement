@@ -22,7 +22,7 @@ output "FortigateUsername" {
   value = "admin"
 }
 
-output "FortiGate-Password" {
+output "FortiGatePassword" {
   value = aws_instance.fgtvm.id
 }
 
@@ -30,10 +30,10 @@ output "FortiManagerPublicIP" {
   value = aws_eip.FMRPublicIP.public_ip
 }
 
-output "FortigateUsername" {
+output "FortiManagerUsername" {
   value = "admin"
 }
 
-output "FortiGate-Password" {
+output "FortiManagerPassword" {
   value = aws_instance.fmrvm.id
 }

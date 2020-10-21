@@ -1,4 +1,4 @@
-## Module 2: Creating your Kubernetes Cluster using kubeadm
+# Module 5: Creating your Kubernetes Cluster using kubeadm
 
 Goal: In this module, you will set up a Kubernetes cluster using `kubeadm`.
 
@@ -11,7 +11,13 @@ POD CIDR == 172.16.0.0/16
 SERVICE CIDR == 192.168.0.0/16
 ```
 
+### NOTE
+
+You will find two directories `configs` and `demo` in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will be in the `configs` directory and the demo app will be unter the `demo` directory.
+
+
 1. ssh into the `master` node using its private IP. Now you can create a new cluster configruation file based on [this](./1-kubeadm-config.yaml). 
+
 
   ```
   $ cat 1-kubeadm-config.yaml
@@ -182,4 +188,14 @@ SERVICE CIDR == 192.168.0.0/16
   ip-10-99-1-4   NotReady   <none>   2m12s   v1.19.2
   master         NotReady   master   16m     v1.19.2
   ```
-  Note: Moving forward any `kubectl` command will be issued on the `master` node.
+  Note: Moving forward any `kubectl` command can be issued on the `master` node. 
+  
+6. Copy the `/etc/kubernetes/admin.conf` to the `jumphost` and run through the same commands below. You need to run the following as a regular user:
+
+```
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+This will allow you to issue `kubectl` commands from the jumphost. You can use the `master` node as well. 

@@ -1,4 +1,4 @@
-## Module 0: Setting up your local environment.
+# Module 1: Setting up your local environment.
 
 Goal: We need to make sure your local environment is set up correctly.
 

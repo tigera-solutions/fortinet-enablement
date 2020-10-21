@@ -16,14 +16,6 @@ variable "aws_region" {
   default     = "us-west-2"
 }
 
-# Ubuntu 20.04 LTS (x64)
-variable "aws_amis" {
-  default = {
-    us-east-2= "ami-0ea76fa632cdbbeee"
-    us-west-2 = "ami-01a5f3ee4a9903e77"
-  }
-}
-
 // Availability zones for the region
 variable "az1" {
   default = "us-west-2a"
@@ -45,11 +37,17 @@ variable "privatecidraz1" {
   default = "10.99.2.0/24"
 }
 
+# Ubuntu 20.04 LTS (x64)
+variable "aws_amis" {
+  default = {
+    us-west-2 = "ami-01a5f3ee4a9903e77"
+  }
+}
+
 // AMIs are for FGTVM-AWS(PAYG) - 6.4.2
 variable "fgtvmami" {
   type = map
   default = {
-    #us-west-2      = "ami-036c4658b4595cc72"
     us-west-2= "ami-03ee081dace39500a"
   }
 }
