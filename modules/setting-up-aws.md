@@ -13,18 +13,16 @@ Goal: this module sets up your AWS environment using Terraform.
 
 2. Assuming your SSH public key is named `mykey.pub` and your private SSH key is named `mykey.pem` and the Key Pair name in AWS is named `mykey`. You need to first enable SSH forwarding locally as follows:
 
-```
-$  eval `ssh-agent -s`
-$  ssh-add ~/.ssh/mykey.pem 
-```
+    ```
+    $  eval `ssh-agent -s`
+    $  ssh-add ~/.ssh/mykey.pem 
+    ```
 
-3. Now you need to make a copy of `terrafrom.template.tfvars` and name it `terraform.tfvars` to specify the AWS key name, path, and your AWS region. Make sure you rename the terraform file `terrafrom.tfvars`. 
+3. Now you need to make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS key name, path, and your AWS region. Make sure you rename the terraform file `terrafrom.tfvars`. 
 
-
+    ```
     🐯 → cat terraform.tfvars 
-    aws_region     = "us-west-2"
     key_name        = "mykey"
-    public_key_path = "~/.ssh/mykey.pub"
     ```
 
 4. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly. 
@@ -115,6 +113,9 @@ master-ip = 10.99.2.X
 worker-1-ip = 10.99.2.X
 worker-2-ip = 10.99.2.X
 ```
+
+Note: If you never accepter Terms of Use for using Fortigate & FortiManager Pay-As-You-Go, you will be required to do so and the operation will fail and point you to the URL to go through that process.
+
 
 6. You should now be able to SSH into the `jumpbox` VM.
 

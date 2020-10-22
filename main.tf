@@ -159,19 +159,12 @@ resource "aws_security_group" "default" {
   }
 }
 
-resource "aws_key_pair" "auth" {
-  key_name   = var.key_name
-  public_key = file(var.public_key_path)
-}
-
 resource "aws_instance" "master" {
 
   instance_type = "t3.xlarge"
   source_dest_check = false 
-  # Lookup the correct AMI based on the region
-  # we specified
   ami = var.aws_amis[var.aws_region]
-  key_name = aws_key_pair.auth.id
+  key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
@@ -191,7 +184,7 @@ resource "aws_instance" "worker-1" {
   instance_type = "t3.xlarge"
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
-  key_name = aws_key_pair.auth.id
+  key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
@@ -210,7 +203,7 @@ resource "aws_instance" "worker-2" {
   instance_type = "t3.xlarge"
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
-  key_name = aws_key_pair.auth.id
+  key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
@@ -235,7 +228,7 @@ resource "aws_instance" "jumpbox" {
   instance_type = "t3.medium"
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
-  key_name = aws_key_pair.auth.id
+  key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
 
@@ -287,7 +280,7 @@ resource "aws_instance" "fmrvm" {
   ami               = lookup(var.fmrvmami, var.aws_region)
   instance_type     = var.fmr_size
   availability_zone = var.az1
-  key_name          = aws_key_pair.auth.id
+  key_name          = var.key_name
 
   root_block_device {
     volume_type = "standard"
@@ -341,7 +334,7 @@ resource "aws_instance" "fgtvm" {
   ami               = lookup(var.fgtvmami, var.aws_region)
   instance_type     = var.fgt_size
   availability_zone = var.az1
-  key_name          = aws_key_pair.auth.id
+  key_name          = var.key_name
   user_data         = data.template_file.FortiGate.rendered
 
   root_block_device {
