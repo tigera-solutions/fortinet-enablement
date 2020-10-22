@@ -13,10 +13,23 @@ SERVICE CIDR == 192.168.0.0/16
 
 ### NOTE
 
-You will find two directories `configs` and `demo` in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will be in the `configs` directory and the demo app will be unter the `demo` directory.
+You will find two directories `configs` and `demo` in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will be in the `configs` directory and the demo app will be unter the `demo` directory. 
+
+```
+~/calico-fortinet$ tree .
+.
+├── 0-install-kubeadm.sh
+├── 1-kubeadm-config.yaml
+├── 2-ebs-storageclass.yaml
+├── 3-loadbalancer.yaml
+├── 4-firewall-config.yaml
+└── demo
+    ├── storefront-demo.yaml
+    └── tiers-demo.yaml
+```
 
 
-1. ssh into the `master` node using its private IP. Now you can create a new cluster configruation file based on [this](./1-kubeadm-config.yaml). 
+1. SSH into the `master` node using its private IP and copy the corresponding config file `1-kubeadm-config.yaml`. Now you can create a new cluster configruation file based on this config.
 
 
   ```
@@ -59,8 +72,6 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
     podSubnet: 172.16.0.0/16
     dnsDomain: cluster.local
   apiServer:
-    certSANs:
-      - "54.200.135.157"
     timeoutForControlPlane: 4m0s
     extraArgs:
       "feature-gates": "EphemeralContainers=true"
@@ -188,7 +199,7 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
   ip-10-99-1-4   NotReady   <none>   2m12s   v1.19.2
   master         NotReady   master   16m     v1.19.2
   ```
-  Note: Moving forward any `kubectl` command can be issued on the `master` node. 
+
   
 6. Copy the `/etc/kubernetes/admin.conf` to the `jumphost` and run through the same commands below. You need to run the following as a regular user:
 

@@ -60,9 +60,12 @@ variable "fmrvmami" {
   }
 }
 
+variable "fgt_size" {
+  default = "c5.large"
+}
 
-variable "size" {
-  default = "c5n.xlarge"
+variable "fmr_size" {
+  default = "m5.large"
 }
 
 

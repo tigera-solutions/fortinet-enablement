@@ -247,12 +247,12 @@ resource "aws_instance" "jumpbox" {
 
   provisioner "file" {
     source      = "configs"
-    destination = "/home/calico-fortinet/configs"
+    destination = "/home/ubuntu/calico-fortinet/"
   }
 
   provisioner "file" {
     source      = "demo"
-    destination = "/home/calico-fortinet/demo"
+    destination = "/home/ubuntu/calico-fortinet/"
   }
 
   tags = {
@@ -285,7 +285,7 @@ resource "aws_network_interface_sg_attachment" "fmrinternalattachment" {
 
 resource "aws_instance" "fmrvm" {
   ami               = lookup(var.fmrvmami, var.aws_region)
-  instance_type     = var.size
+  instance_type     = var.fmr_size
   availability_zone = var.az1
   key_name          = aws_key_pair.auth.id
 
@@ -296,7 +296,7 @@ resource "aws_instance" "fmrvm" {
 
   ebs_block_device {
     device_name = "/dev/sdb"
-    volume_size = "30"
+    volume_size = "80"
     volume_type = "standard"
   }
 
@@ -339,7 +339,7 @@ resource "aws_network_interface_sg_attachment" "internalattachment" {
 
 resource "aws_instance" "fgtvm" {
   ami               = lookup(var.fgtvmami, var.aws_region)
-  instance_type     = var.size
+  instance_type     = var.fgt_size
   availability_zone = var.az1
   key_name          = aws_key_pair.auth.id
   user_data         = data.template_file.FortiGate.rendered
@@ -351,7 +351,7 @@ resource "aws_instance" "fgtvm" {
 
   ebs_block_device {
     device_name = "/dev/sdb"
-    volume_size = "30"
+    volume_size = "80"
     volume_type = "standard"
   }
 

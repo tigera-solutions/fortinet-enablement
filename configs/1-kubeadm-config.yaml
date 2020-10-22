@@ -35,8 +35,6 @@ networking:
   podSubnet: 172.16.0.0/16
   dnsDomain: cluster.local
 apiServer:
-  certSANs:
-    - "54.200.135.157"
   timeoutForControlPlane: 4m0s
   extraArgs:
     "feature-gates": "EphemeralContainers=true"

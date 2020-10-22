@@ -1,12 +1,12 @@
 # Module 6: Installing Calico Enterprise
 
-Goal: Install and Configure Calico Enterprise on your K8s Cluster.
+**Goal:** Install and Configure Calico Enterprise on your K8s Cluster.
 
 ### Steps
 
 Now it's time to install Calico Enterprise on this cluster. We will be following [these](https://docs.tigera.io/getting-started/kubernetes/self-managed-on-prem/generic-install) steps. 
 
-1. The first step is to set up cloud storage for Calico Enterprise. Since we're running on AWS, we can use [the following](./2-ebs-storageclass.yaml) EBS Storage Class. You have to create the following configuration from the `master` node.
+1. The first step is to set up cloud storage for Calico Enterprise. Since we're running on AWS, we can use the `2-ebs-storageclass.yaml` EBS Storage Class config. 
 
   ```
   $ cat 2-ebs-storage-class.yaml 
@@ -27,7 +27,6 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
   storageclass.storage.k8s.io/tigera-elasticsearch created
   ```
 
-
 2. Now we can create the Tigera and Prometheus Operaters that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
 
   ```
@@ -35,7 +34,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
   $ kubectl create -f https://docs.tigera.io/manifests/tigera-prometheus-operator.yaml
   ```
 
-3. In order to install Calico Enterprise, you need a Docker JSON config file to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret.
+3. In order to install Calico Enterprise, you need a pull secret to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret. This file and the trial license key were provided to you previously.
 
   ```
   $ kubectl create secret generic tigera-pull-secret \
@@ -72,7 +71,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
   manager               True        False         False      35m
   ```
 
-7. It's time now to expose Calico Enterprise UI externally using [this](./loadbalancer.yaml) `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP. 
+7. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP. 
 
   ```
   $ cat 3-loadbalancer.yaml 
