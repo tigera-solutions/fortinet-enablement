@@ -1,10 +1,9 @@
 # Module 9: Running a Sample Application 
 
-Goal: We are now ready to verify the integration by launching an application and scaling its pods to ensure that the pods' IPs are automatically populated in FortiGate.
+**Goal:** We are now ready to verify the integration by launching an application and scaling its pods to ensure that the pods' IPs are automatically populated in FortiGate.
 
 
 ## Steps
-
 
 1. Under the `demo` subdirectory, there is a `tiers-demo.yaml` and `storefront-demo.yaml` deployment files. Let's take a look at the `tiers-demo.yaml`:
 

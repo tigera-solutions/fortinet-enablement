@@ -1,6 +1,6 @@
 # Module 5: Creating your Kubernetes Cluster using kubeadm
 
-Goal: In this module, you will set up a Kubernetes cluster using `kubeadm`.
+**Goal:** In this module, you will set up a Kubernetes cluster using `kubeadm`.
 
 ### Steps
 
@@ -33,7 +33,9 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
 
 
   ```
-  $ cat 1-kubeadm-config.yaml
+  jumpbox$ scp 1-kubeadm-config.yaml ubuntu@<MASTER_IP>:/home/ubuntu
+  ...
+  master$ cat 1-kubeadm-config.yaml
 
   apiVersion: kubeadm.k8s.io/v1beta2
   bootstrapTokens:
@@ -83,7 +85,7 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
       "feature-gates": "EphemeralContainers=true"
   ```
 
-2. Now you can launch kubernetes using kubeadm:
+2. Now you can launch kubernetes using kubeadm (On the `master` node)
 
   ```
   $ sudo kubeadm init --config 1-kubeadm-config.yaml
@@ -169,39 +171,8 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
   ```
 
-4. For every worker node, ssh into the node and join it to the cluster using the command you received on the master node:
-
-  ```
-  $ sudo kubeadm join 10.99.1.203:6443 --token abcdef.0123456789abcdef     --discovery-token-ca-cert-hash sha256:c211c95124bde99ce8f78ae4b5fc0058d0d49c847b73e34764f1ae05f205b1d4
-  [preflight] Running pre-flight checks
-    [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
-  [preflight] Reading configuration from the cluster...
-  [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-  [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-  [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-  [kubelet-start] Starting the kubelet
-  [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
-
-  This node has joined the cluster:
-  * Certificate signing request was sent to apiserver and a response was received.
-  * The Kubelet was informed of the new secure connection details.
-
-  Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-  ```
-
-
-5. Verify that you have successfully joined the nodes to the cluster. On your `master` node:
-
-  ```
-  $ kubectl get nodes
-  NAME           STATUS     ROLES    AGE     VERSION
-  ip-10-99-1-6   NotReady   <none>   2m13s   v1.19.2
-  ip-10-99-1-4   NotReady   <none>   2m12s   v1.19.2
-  master         NotReady   master   16m     v1.19.2
-  ```
-
   
-6. Copy the `/etc/kubernetes/admin.conf` to the `jumphost` and run through the same commands below. You need to run the following as a regular user:
+4. Copy the `/etc/kubernetes/admin.conf` to the `jumphost` and run through the same commands below. You need to run the following as a regular user:
 
 ```
     mkdir -p $HOME/.kube
@@ -209,4 +180,4 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-This will allow you to issue `kubectl` commands from the jumphost. You can use the `master` node as well. 
+This will allow you to issue `kubectl` commands from the `jumphost`. You can use the `master` node as well. 

@@ -113,3 +113,34 @@ After creating the service, it may take a few minutes for the load balancer to b
   ```
 
 Keep track of these two tokens as they will be used later on!
+
+9. Now that we installed Calico, we need to join the other nodes. For every worker node, ssh into the node and join it to the cluster using the command you received on the master node:
+
+  ```
+  $ sudo kubeadm join 10.99.1.203:6443 --token abcdef.0123456789abcdef     --discovery-token-ca-cert-hash sha256:c211c95124bde99ce8f78ae4b5fc0058d0d49c847b73e34764f1ae05f205b1d4
+  [preflight] Running pre-flight checks
+    [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+  [preflight] Reading configuration from the cluster...
+  [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+  [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+  [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+  [kubelet-start] Starting the kubelet
+  [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+  This node has joined the cluster:
+  * Certificate signing request was sent to apiserver and a response was received.
+  * The Kubelet was informed of the new secure connection details.
+
+  Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+  ```
+
+
+10. Verify that you have successfully joined the nodes to the cluster. On your `master` node:
+
+  ```
+  $ kubectl get nodes
+  NAME           STATUS     ROLES    AGE     VERSION
+  ip-10-99-1-6   NotReady   <none>   2m13s   v1.19.2
+  ip-10-99-1-4   NotReady   <none>   2m12s   v1.19.2
+  master         NotReady   master   16m     v1.19.2
+  ```

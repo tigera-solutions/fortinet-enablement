@@ -1,6 +1,6 @@
 # Module 7: Integrating FortiGate with FortiManager
 
-Goal: Integrate FortiGate with FortiManager.
+**Goal:** Integrate FortiGate with FortiManager.
 
 ### Steps
 

@@ -1,2 +1,1 @@
-public_key_path = "~/.ssh/key.pub"
 key_name = "keyname"

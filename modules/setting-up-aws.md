@@ -4,28 +4,17 @@ Goal: this module sets up your AWS environment using Terraform.
 
 ### Steps
 
-1. Export your AWS Access Key/ID
 
-    ```
-    $ export AWS_ACCESS_KEY_ID="anaccesskey"
-    $ export AWS_SECRET_ACCESS_KEY="asecretkey"
-    ```
 
-2. Assuming your SSH public key is named `mykey.pub` and your private SSH key is named `mykey.pem` and the Key Pair name in AWS is named `mykey`. You need to first enable SSH forwarding locally as follows:
 
-    ```
-    $  eval `ssh-agent -s`
-    $  ssh-add ~/.ssh/mykey.pem 
-    ```
-
-3. Now you need to make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS key name, path, and your AWS region. Make sure you rename the terraform file `terrafrom.tfvars`. 
+1. Make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS key name, path, and your AWS region. Make sure you rename the terraform file `terrafrom.tfvars`. 
 
     ```
     🐯 → cat terraform.tfvars 
     key_name        = "mykey"
     ```
 
-4. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly. 
+2. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly. 
 
     ```
         # Ubuntu 20.04 LTS (x64)
@@ -36,7 +25,9 @@ Goal: this module sets up your AWS environment using Terraform.
         }
     ```
 
-5. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances.
+3. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances. 
+
+> Note: If you never accepted Terms of Use for using Fortigate & FortiManager Pay-As-You-Go, you will be required to do so and the operation will fail and point you to the URL to go through that process.
 
 
 ```
@@ -102,10 +93,10 @@ aws_route_table_association.public1associate: Refreshing state... [id=rtbassoc-0
 
 Outputs:
 
-FGTPublicIP = 44.237.X.X
+FGTPublicIP = X.X.X.X
 FortiGatePassword = i-034917bd90XXXX
 FortiManagerPassword = i-086dec29XXXX
-FortiManagerPublicIP = 18.X.X.X
+FortiManagerPublicIP = X.X.X.X
 FortiManagerUsername = admin
 FortigateUsername = admin
 jumpbox-ip = 18.X.X.X
@@ -114,10 +105,10 @@ worker-1-ip = 10.99.2.X
 worker-2-ip = 10.99.2.X
 ```
 
-Note: If you never accepter Terms of Use for using Fortigate & FortiManager Pay-As-You-Go, you will be required to do so and the operation will fail and point you to the URL to go through that process.
+
+6. You should now be able to SSH into the `jumpbox` VM using its public IP.
 
 
-6. You should now be able to SSH into the `jumpbox` VM.
 
 
 

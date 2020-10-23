@@ -10,6 +10,7 @@ Goal: In this step, you will configure FortiGate firewall to act as the default 
 
 3. Navigate to **Policy and Objects** > **Firewall Policy** then create a policy to allow ALL traffic from **Port 2** --> **Port 1**. This is required to ensure that traffic from the k8s cluster passes through the FortiGate firewall.
 
+![img1](../img/fortigate_policy_v2.png)
 
-![img](../img/firewall_policy.png)
+![img2](../img/firewall_policy.png)
 

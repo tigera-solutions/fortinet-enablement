@@ -4,7 +4,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
 
 ### Steps
 
-1. ssh into the `jumpbox` node using its public IP. This was provided in the terraform output.
+1. SSH into the `jumpbox` node using its public IP. This was provided in the terraform output.
 
 2. From the `jumpbox` node, you can now ssh into nodes: `master`, `worker-1`, and `worker-2` using their **private** ip address that was provided in the output of the `terraform apply` step. The username is `ubuntu`.
 
@@ -31,10 +31,15 @@ ubuntu@ip-10-99-2-212:~$
     - kubectl
     - kubeadm
     - calicoctl
+
+
 Copy this script to the `master`, `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `jumphost` node.
 
 ```
-$ source 0-install-kubeadm.sh
+
+jumpbox$ scp 0-install-kubeadm.sh ubuntu@<MASTER_IP>:/home/ubuntu
+...
+master$ source /home/ubuntu/0-install-kubeadm.sh
 ....
 $ which kubelet kubectl docker calicoctl kubeadm
 /usr/bin/kubelet

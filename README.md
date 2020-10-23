@@ -15,7 +15,7 @@ We have created a slack channel on the Calico User Group to discuss all things r
 
 ## Pre-Requisites/Requirements
 
-- Calico Enterprise Trial or Production License along with a pull secret. 
+- Calico Enterprise Trial or Production License along with a pull secret. If you do not have a license you can request one [here](https://www.tigera.io/tigera-products/calico-enterprise-trial#installation-trial)
 - AWS credentials with the IAM role to create
   * VPC
   * Subnets
@@ -24,6 +24,7 @@ We have created a slack channel on the Calico User Group to discuss all things r
   * ELB
 - SSH client to connect to AWS resources
 - A public/private SSH key pair created and added in your AWS account and for the specifc region you wish to run this in.
+- Git 
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) v0.13+ installed locally.
 
 ## Architecture

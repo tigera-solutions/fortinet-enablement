@@ -159,9 +159,37 @@ resource "aws_security_group" "default" {
   }
 }
 
+
+
+## IAM Role and Policy for k8s Nodes
+
+resource "aws_iam_role" "k8s-access-role" {
+  name               = "k8s-access-role"
+  assume_role_policy = "${file("iamrole.json")}"
+}
+
+resource "aws_iam_policy" "k8s-access-policy" {
+  name        = "k8s-access-policy"
+  description = "k8s aws controller policy"
+  policy      = "${file("iampolicy.json")}"
+}
+
+resource "aws_iam_policy_attachment" "k8s-policy-attach" {
+  name       = "policy-attach"
+  roles      = ["${aws_iam_role.k8s-access-role.name}"]
+  policy_arn = "${aws_iam_policy.k8s-access-policy.arn}"
+}
+
+resource "aws_iam_instance_profile" "instance_profile" {
+  name  = "instance_profile"
+  role = aws_iam_role.k8s-access-role.name
+}
+
+
 resource "aws_instance" "master" {
 
   instance_type = "t3.xlarge"
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
   key_name = var.key_name
@@ -182,6 +210,7 @@ resource "aws_instance" "master" {
 resource "aws_instance" "worker-1" {
 
   instance_type = "t3.xlarge"
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
   key_name = var.key_name
@@ -201,6 +230,7 @@ resource "aws_instance" "worker-1" {
 
 resource "aws_instance" "worker-2" {
   instance_type = "t3.xlarge"
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
   key_name = var.key_name
@@ -240,12 +270,12 @@ resource "aws_instance" "jumpbox" {
 
   provisioner "file" {
     source      = "configs"
-    destination = "/home/ubuntu/calico-fortinet/"
+    destination = "/home/ubuntu/calico-fortinet"
   }
 
   provisioner "file" {
     source      = "demo"
-    destination = "/home/ubuntu/calico-fortinet/"
+    destination = "/home/ubuntu/calico-fortinet"
   }
 
   tags = {
