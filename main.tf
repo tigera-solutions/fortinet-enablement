@@ -31,7 +31,9 @@ resource "aws_subnet" "fortinet-calico-pvt-subnet" {
   availability_zone = var.az1
   map_public_ip_on_launch = true
   tags = {
-    Name = "fortinet-calico-pvt-subnet"
+    Name = "fortinet-calico-pvt-subnet",
+    "kubernetes.io/cluster/kubernetes" = "owned",
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
 
@@ -42,7 +44,9 @@ resource "aws_subnet" "fortinet-calico-pub-subnet" {
   availability_zone = var.az1
   map_public_ip_on_launch = true
   tags = {
-    Name = "fortinet-calico-pub-subnet"
+    Name = "fortinet-calico-pub-subnet",
+    "kubernetes.io/cluster/kubernetes" = "owned",
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -202,7 +206,8 @@ resource "aws_instance" "master" {
     volume_type = "standard"
   }
   tags = {
-    Name = "master"
+    Name = "master",
+    "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
 }
@@ -223,7 +228,8 @@ resource "aws_instance" "worker-1" {
     volume_type = "standard"
   }
   tags = {
-    Name = "worker-1"
+    Name = "worker-1",
+    "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
 }
@@ -243,7 +249,8 @@ resource "aws_instance" "worker-2" {
     volume_type = "standard"
   }
   tags = {
-    Name = "worker-2"
+    Name = "worker-2",
+    "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
 }

@@ -57,19 +57,21 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
   licensekey.projectcalico.org/default created
   ```
 
-6. Finally ensure that all components of Calico Enterprise are working as expected:
+6. Finally ensure that the `apiserver` and `calico` and `log-storage` componenets of Calico Enterprise are working as expected. This means that the Calico CNI is working as expected and now we can join the other nodes. 
 
   ```
   $ kubectl get tigerastatus
   NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
   apiserver             True        False         False      35m
   calico                True        False         False      34m
-  compliance            True        False         False      33m
-  intrusion-detection   True        False         False      35m
-  log-collector         True        False         False      33m
+  compliance            False       False         False      33m
+  intrusion-detection   False       False         False      35m
+  log-collector         False       False         False      33m
   log-storage           True        False         True       35m
-  manager               True        False         False      35m
+  manager               False       False         False      35m
   ```
+
+
 
 7. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP. 
 
@@ -97,7 +99,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
 After creating the service, it may take a few minutes for the load balancer to be created. Once complete, the load balancer IP address will appear as an `ExternalIP` in `kubectl get services -n tigera-manager tigera-manager-external`.
 
-8. Finally, we need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
+8. We need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
 
   ```
   # Creating a Calico Enterprise User called admin and its associated k8s Service Account
@@ -114,33 +116,8 @@ After creating the service, it may take a few minutes for the load balancer to b
 
 Keep track of these two tokens as they will be used later on!
 
-9. Now that we installed Calico, we need to join the other nodes. For every worker node, ssh into the node and join it to the cluster using the command you received on the master node:
+9. The final step is to enable Calico Enterprise security policies that will ensure that the various components of the product are secured.
 
-  ```
-  $ sudo kubeadm join 10.99.1.203:6443 --token abcdef.0123456789abcdef     --discovery-token-ca-cert-hash sha256:c211c95124bde99ce8f78ae4b5fc0058d0d49c847b73e34764f1ae05f205b1d4
-  [preflight] Running pre-flight checks
-    [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
-  [preflight] Reading configuration from the cluster...
-  [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-  [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-  [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-  [kubelet-start] Starting the kubelet
-  [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
-
-  This node has joined the cluster:
-  * Certificate signing request was sent to apiserver and a response was received.
-  * The Kubelet was informed of the new secure connection details.
-
-  Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-  ```
-
-
-10. Verify that you have successfully joined the nodes to the cluster. On your `master` node:
-
-  ```
-  $ kubectl get nodes
-  NAME           STATUS     ROLES    AGE     VERSION
-  ip-10-99-1-6   NotReady   <none>   2m13s   v1.19.2
-  ip-10-99-1-4   NotReady   <none>   2m12s   v1.19.2
-  master         NotReady   master   16m     v1.19.2
-  ```
+```
+kubectl create -f https://docs.tigera.io/manifests/tigera-policies.yaml
+```

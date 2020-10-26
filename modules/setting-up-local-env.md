@@ -22,6 +22,15 @@ is 0.13.4. You can update by downloading from https://www.terraform.io/downloads
     $  ssh-add ~/.ssh/mykey.pem 
     ```
 
+Additionally, you would need to make sure that your SSH client enables forwarding (`ForwardAgent yes`) as follows: 
+
+    ```
+        🐯 → cat ~/.ssh/config
+
+        HashKnownHosts no
+        ForwardAgent yes
+
+    ```
 
 3. Export your AWS Access Key/ID. If you already have them under your `~/.aws/credentials` then you don't need to do this step.
 

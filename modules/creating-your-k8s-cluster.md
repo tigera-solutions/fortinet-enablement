@@ -13,76 +13,85 @@ SERVICE CIDR == 192.168.0.0/16
 
 ### NOTE
 
-You will find two directories `configs` and `demo` in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will be in the `configs` directory and the demo app will be unter the `demo` directory. 
+You will find some configuration files and `demo` directory in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will in this directory and the demo app will be unter the `demo` directory. 
 
 ```
 ~/calico-fortinet$ tree .
 .
-├── 0-install-kubeadm.sh
-├── 1-kubeadm-config.yaml
-├── 2-ebs-storageclass.yaml
-├── 3-loadbalancer.yaml
-├── 4-firewall-config.yaml
+|-- 0-install-kubeadm.sh
+|-- 1-kubeadm-init-config.yaml
+|-- 1-kubeadm-join-config.yaml
+|-- 2-ebs-storageclass.yaml
+|-- 3-loadbalancer.yaml
+`-- 4-firewall-config.yaml
 └── demo
     ├── storefront-demo.yaml
     └── tiers-demo.yaml
 ```
 
 
-1. SSH into the `master` node using its private IP and copy the corresponding config file `1-kubeadm-config.yaml`. Now you can create a new cluster configruation file based on this config.
+1.  Copy the `1-kubeadm-init-config.yaml` file to the `master` node. 
 
 
   ```
-  jumpbox$ scp 1-kubeadm-config.yaml ubuntu@<MASTER_IP>:/home/ubuntu
-  ...
-  master$ cat 1-kubeadm-config.yaml
+  $ scp 1-kubeadm-config.yaml ubuntu@<MASTER_IP>:/home/ubuntu
+  ```
+
+2. SSH into the `master` node using its private IP. Then update the `1-kubeadm-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). Now you can create a new cluster configruation file based on this config. 
+
+```
+$ cat 1-kubeadm-config.yaml
 
   apiVersion: kubeadm.k8s.io/v1beta2
-  bootstrapTokens:
-  - groups:
-    - system:bootstrappers:kubeadm:default-node-token
-    token: abcdef.0123456789abcdef
-    ttl: 24h0m0s
-    usages:
-    - signing
-    - authentication
-  kind: InitConfiguration
-  localAPIEndpoint:
-    bindPort: 6443
-  nodeRegistration:
-    criSocket: /var/run/dockershim.sock
-    name: master
-    taints:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-    kubeletExtraArgs:
-      "feature-gates": "EphemeralContainers=true"
-  ---
-  apiVersion: kubeadm.k8s.io/v1beta2
-  certificatesDir: /etc/kubernetes/pki
-  clusterName: kubernetes
-  dns:
-    type: CoreDNS
-  etcd:
-    local:
-      dataDir: /var/lib/etcd
-  imageRepository: k8s.gcr.io
-  kind: ClusterConfiguration
-  kubernetesVersion: v1.19.0
-  networking:
-    serviceSubnet: 192.168.0.0/16
-    podSubnet: 172.16.0.0/16
-    dnsDomain: cluster.local
-  apiServer:
-    timeoutForControlPlane: 4m0s
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-  scheduler:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-  controllerManager:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: abcdef.0123456789abcdef
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
+kind: InitConfiguration
+localAPIEndpoint:
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: master                           # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+  kubeletExtraArgs:
+    "feature-gates": "EphemeralContainers=true"
+    cloud-provider: aws
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: k8s.gcr.io
+kind: ClusterConfiguration
+kubernetesVersion: v1.19.0
+networking:
+  serviceSubnet: 192.168.0.0/16
+  podSubnet: 172.16.0.0/16
+  dnsDomain: cluster.local
+apiServer:
+  timeoutForControlPlane: 4m0s
+  extraArgs:
+    "feature-gates": "EphemeralContainers=true"
+    cloud-provider: aws
+scheduler:
+  extraArgs:
+    "feature-gates": "EphemeralContainers=true"
+controllerManager:
+  extraArgs:
+    "feature-gates": "EphemeralContainers=true"
+    cloud-provider: aws
+    configure-cloud-routes: "false"
   ```
 
 2. Now you can launch kubernetes using kubeadm (On the `master` node)
@@ -163,7 +172,7 @@ You will find two directories `configs` and `demo` in the `jumphost` under `/hom
 
   ```
 
-3. Make sure you follow the below steps to setup `kubectl`
+3. Make sure you follow the below steps to setup `kubectl` and take note/save of the `kubeadm join ` coomand that was provided.
 
   ```
   $ mkdir -p $HOME/.kube

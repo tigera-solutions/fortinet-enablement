@@ -33,26 +33,22 @@ ubuntu@ip-10-99-2-212:~$
     - calicoctl
 
 
-Copy this script to the `master`, `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `jumphost` node.
+4. Copy the script file to the `master`, `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `jumphost` node.
 
-```
-
-jumpbox$ scp 0-install-kubeadm.sh ubuntu@<MASTER_IP>:/home/ubuntu
-...
-master$ source /home/ubuntu/0-install-kubeadm.sh
-....
-$ which kubelet kubectl docker calicoctl kubeadm
-/usr/bin/kubelet
-/usr/bin/kubectl
-/usr/bin/docker
-/usr/bin/calicoctl
-/usr/bin/kubeadm
-```
-
-### NOTE
-
-You will find two directories `configs` and `demo` in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will be in the `configs` directory and the demo app will be unter the `demo` directory.
-
+    ```
+        $ scp 0-install-kubeadm.sh ubuntu@<MASTER_IP>:/home/ubuntu
+        $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-1_IP>:/home/ubuntu
+        $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-2_IP>:/home/ubuntu
+        ...
+        $ source /home/ubuntu/0-install-kubeadm.sh
+        ....
+        $ which kubelet kubectl docker calicoctl kubeadm
+        /usr/bin/kubelet
+        /usr/bin/kubectl
+        /usr/bin/docker
+        /usr/bin/calicoctl
+        /usr/bin/kubeadm
+    ```
 
 
 

@@ -48,6 +48,7 @@ Below is an architecture diagram of the various components that will be deployed
 - [Module 4: Accessing the K8s Nodes](./modules/accessing-your-k8s-nodes.md)
 - [Module 5: Creating Your Kubernetes Cluster](./modules/creating-your-k8s-cluster.md)
 - [Module 6: Installing and Configuring Calico Enterprise](./modules/installing-calico.md)
+- [Module X: Joining Worker Nodes](./modules/join-nodes.md)
 - [Module 7: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
 - [Module 8: Integrating Calico Enterprise with FortiManager and FortiGate](./modules/integrate-calico-fortigate.md)
 - [Module 9: Running a Sample Application](./modules/deploy-app.md)
