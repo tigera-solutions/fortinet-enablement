@@ -5,9 +5,7 @@ Goal: this module sets up your AWS environment using Terraform.
 ### Steps
 
 
-
-
-1. Make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS key name, path, and your AWS region. Make sure you rename the terraform file `terrafrom.tfvars`. 
+1. Make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS Key Pair name. Make sure you rename the terraform file `terrafrom.tfvars`. 
 
     ```
     🐯 → cat terraform.tfvars 
@@ -99,14 +97,13 @@ FortiManagerPassword = i-086dec29XXXX
 FortiManagerPublicIP = X.X.X.X
 FortiManagerUsername = admin
 FortigateUsername = admin
-jumpbox-ip = 18.X.X.X
 master-ip = 10.99.2.X
 worker-1-ip = 10.99.2.X
 worker-2-ip = 10.99.2.X
 ```
 
 
-6. You should now be able to SSH into the `jumpbox` VM using its public IP.
+6. You should now be able to SSH into the `master` VM using its public IP.
 
 
 

@@ -16,12 +16,8 @@ We have created a slack channel on the Calico User Group to discuss all things r
 ## Pre-Requisites/Requirements
 
 - Calico Enterprise Trial or Production License along with a pull secret. If you do not have a license you can request one [here](https://www.tigera.io/tigera-products/calico-enterprise-trial#installation-trial)
-- AWS credentials with the IAM role to create
-  * VPC
-  * Subnets
-  * EC2 Instances
-  * Secuirty Groups
-  * ELB
+- AWS credentials
+- MacOS or Linux-based machine. Windows w/WSL2 will work but not tested with these instructions.
 - SSH client to connect to AWS resources
 - A public/private SSH key pair created and added in your AWS account and for the specifc region you wish to run this in.
 - Git 
@@ -33,8 +29,7 @@ Below is an architecture diagram of the various components that will be deployed
 - A VPC with two subnets: one private and one public.
 - An Internet Gateway attached to the Public Subnet
 - A default security group to allow SSH acces, HTTP/HTTPs traffic, and specific TCP ports for Fortigate and FortiManager.
-- Three EC2 instances for k8s: `master`, `worker-1`, and  `worker-2` launched in the private subnet. 
-- A jumphost that will be deployed in the public subnet. This will be used to access the k8s VMs via SSH.
+- Three EC2 instances for k8s: `master`, `worker-1`, and  `worker-2`.
 - A Fortigate and FortiManager VMs (PAYG).
 
 
@@ -47,16 +42,22 @@ Below is an architecture diagram of the various components that will be deployed
 - [Module 3: Configuring Fortigate to allow Internet Traffic](./modules/configuring-fortigate-to-allow-internet.md)
 - [Module 4: Accessing the K8s Nodes](./modules/accessing-your-k8s-nodes.md)
 - [Module 5: Creating Your Kubernetes Cluster](./modules/creating-your-k8s-cluster.md)
-- [Module 6: Installing and Configuring Calico Enterprise](./modules/installing-calico.md)
-- [Module X: Joining Worker Nodes](./modules/join-nodes.md)
-- [Module 7: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
-- [Module 8: Integrating Calico Enterprise with FortiManager and FortiGate](./modules/integrate-calico-fortigate.md)
-- [Module 9: Running a Sample Application](./modules/deploy-app.md)
+- [Module 6: Joining Worker Nodes](./modules/join-nodes.md)
+- [Module 7: Installing and Configuring Calico Enterprise](./modules/installing-calico.md)
+- [Module 8: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
+- [Module 9: Integrating Calico Enterprise with FortiManager and FortiGate](./modules/integrate-calico-fortigate.md)
+- [Module 10: Running a Sample Application](./modules/deploy-app.md)
 
 
 ### Cleanup
 
-You can issue a `terraform destroy` to fully remove all the environment resources.
+1. You need to make sure you delete the loadbalancer service first.
+
+```
+$ kubectl delete -f 3-loadbalancer.yaml
+```
+
+2. Now you can issue a `terraform destroy` to fully remove all the environment resources.
 
 ```
 🐯 → terraform destroy 

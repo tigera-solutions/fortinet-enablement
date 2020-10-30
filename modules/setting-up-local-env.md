@@ -38,3 +38,26 @@ Additionally, you would need to make sure that your SSH client enables forwardin
     $ export AWS_ACCESS_KEY_ID="anaccesskey"
     $ export AWS_SECRET_ACCESS_KEY="asecretkey"
     ```
+
+4. Download this repo into your environment:
+
+```
+$ git clone https://github.com/tigera-solutions/fortinet-enablement
+```
+
+5. Copy the supplied Calico Enterprise license (`license.yaml`) and pull secret (`dockerjsonconfig.json`) into the new directory's `configs` subdirectory. 
+
+```
+ → tree .
+.
+|-- README.md
+|-- configs
+|   |-- 0-install-kubeadm.sh
+|   |-- 1-kubeadm-init-config.yaml
+|   |-- 1-kubeadm-join-config.yaml
+|   |-- 2-ebs-storageclass.yaml
+|   |-- 3-loadbalancer.yaml
+|   |-- 4-firewall-config.yaml
+|   |-- dockerjsonconfig.json
+|   `-- license.yaml
+```

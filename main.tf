@@ -131,19 +131,6 @@ resource "aws_security_group" "default" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  ingress {
-    from_port   = 6443
-    to_port     = 6443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 8443
-    to_port     = 8443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     description = "all traffic from VPC"
@@ -162,8 +149,6 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-
 
 ## IAM Role and Policy for k8s Nodes
 
@@ -191,20 +176,35 @@ resource "aws_iam_instance_profile" "instance_profile" {
 
 
 resource "aws_instance" "master" {
-
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = self.public_ip
+  }
   instance_type = "t3.xlarge"
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   source_dest_check = false 
   ami = var.aws_amis[var.aws_region]
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
+  subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
 
   ebs_block_device {
     device_name = "/dev/sdb"
     volume_size = "30"
     volume_type = "standard"
   }
+
+  provisioner "file" {
+    source      = "configs"
+    destination = "/home/ubuntu/calico-fortinet"
+  }
+
+  provisioner "file" {
+    source      = "demo"
+    destination = "/home/ubuntu/calico-fortinet"
+  }
+
   tags = {
     Name = "master",
     "kubernetes.io/cluster/kubernetes" = "owned"
@@ -254,43 +254,6 @@ resource "aws_instance" "worker-2" {
   }
 
 }
-
-resource "aws_instance" "jumpbox" {
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    host = self.public_ip
-  }
-
-  instance_type = "t3.medium"
-  source_dest_check = false 
-  ami = var.aws_amis[var.aws_region]
-  key_name = var.key_name
-  vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
-
-  ebs_block_device {
-    device_name = "/dev/sdb"
-    volume_size = "30"
-    volume_type = "standard"
-  }
-
-  provisioner "file" {
-    source      = "configs"
-    destination = "/home/ubuntu/calico-fortinet"
-  }
-
-  provisioner "file" {
-    source      = "demo"
-    destination = "/home/ubuntu/calico-fortinet"
-  }
-
-  tags = {
-    Name = "jumpbox"
-  }
-  }
-  
-
 
 // FMR instance
 resource "aws_network_interface" "fmrvm_eth0" {

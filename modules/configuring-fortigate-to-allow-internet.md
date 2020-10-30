@@ -4,7 +4,7 @@ Goal: In this step, you will configure FortiGate firewall to act as the default 
 
 ### Steps
 
-1. From your browser, log into Fortigate Firwalle using the public IP and port `8443` provided to you in the output of the `terraform apply` step.
+1. From your browser, log into Fortigate Firwalle using the public IP and port `443` provided to you in the output of the `terraform apply` step.
 
 2. The default username is `admin` and the default password is the **EC2 Instance ID**. Once you log in, change the password. Then log in with the new password that you created.
 

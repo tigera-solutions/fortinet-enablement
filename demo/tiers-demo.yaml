@@ -99,8 +99,16 @@ kind: GlobalNetworkPolicy
 metadata:
   name: fortinet.storefront-fortigate
 spec:
-  selector: "app == 'microservice2'"
-  types:
-  - Egress
+  tier: fortinet
+  selector: app == "microservice2"
+  namespaceSelector: ''
+  serviceAccountSelector: ''
   egress:
-  - action: Allow
+    - action: Allow
+      source: {}
+      destination: {}
+  doNotTrack: false
+  applyOnForward: false
+  preDNAT: false
+  types:
+    - Egress

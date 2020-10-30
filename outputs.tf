@@ -1,8 +1,8 @@
-output "jumpbox-ip" {
-  value = aws_instance.jumpbox.public_ip
+output "master-public-ip" {
+  value = aws_instance.master.public_ip
 }
 
-output "master-ip" {
+output "master-private-ip" {
   value = aws_instance.master.private_ip
 }
 
@@ -16,6 +16,10 @@ output "worker-2-ip" {
 
 output "FGTPublicIP" {
   value = aws_eip.FGTPublicIP.public_ip
+}
+
+output "FGTPrivateIP" {
+  value = aws_instance.fgtvm.private_ip
 }
 
 output "FortigateUsername" {

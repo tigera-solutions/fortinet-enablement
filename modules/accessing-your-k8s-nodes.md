@@ -4,9 +4,9 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
 
 ### Steps
 
-1. SSH into the `jumpbox` node using its public IP. This was provided in the terraform output.
+1. SSH into the `master` node using its public IP. This was provided in the terraform output.
 
-2. From the `jumpbox` node, you can now ssh into nodes: `master`, `worker-1`, and `worker-2` using their **private** ip address that was provided in the output of the `terraform apply` step. The username is `ubuntu`.
+2. From the `master` node, you can now ssh into nodes:  `worker-1`, and `worker-2` using their **private** ip address that was provided in the output of the `terraform apply` step. The username is `ubuntu`.
 
 ```
 🐯 → ssh ubuntu@34.212.X.X
@@ -25,7 +25,7 @@ ubuntu@ip-10-99-2-212:~$
 
 ```
 
-3. On the `jumpbox` node, there is a script named `/home/calico-fortinet/configs/0-install-kubeadm.sh`. This script will install the following packages: 
+3. On the `master` node, there is a script named `0-install-kubeadm.sh` under the`/home/calico-fortinet` directory. This script will install the following packages: 
     - Docker
     - kubeadm
     - kubectl
@@ -33,10 +33,9 @@ ubuntu@ip-10-99-2-212:~$
     - calicoctl
 
 
-4. Copy the script file to the `master`, `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `jumphost` node.
+4. Copy the script file to the  `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `master`
 
     ```
-        $ scp 0-install-kubeadm.sh ubuntu@<MASTER_IP>:/home/ubuntu
         $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-1_IP>:/home/ubuntu
         $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-2_IP>:/home/ubuntu
         ...
@@ -49,6 +48,13 @@ ubuntu@ip-10-99-2-212:~$
         /usr/bin/calicoctl
         /usr/bin/kubeadm
     ```
+
+5. There is also another kubeadm configuration named `1-kubeadm-join-config.yaml` under the same directory. Copy it to the two worker nodes:
+
+```
+        $ scp 1-kubeadm-join-config.yaml ubuntu@<WOERKER-1_IP>:/home/ubuntu
+        $ scp 1-kubeadm-join-config.yaml ubuntu@<WOERKER-2_IP>:/home/ubuntu
+```
 
 
 

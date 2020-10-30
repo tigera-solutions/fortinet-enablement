@@ -13,35 +13,31 @@ SERVICE CIDR == 192.168.0.0/16
 
 ### NOTE
 
-You will find some configuration files and `demo` directory in the `jumphost` under `/home/calico-fortinet/`. All the configurations needed will in this directory and the demo app will be unter the `demo` directory. 
+You will find some configuration files and `demo` directory in the `master` node under `/home/calico-fortinet/` directory. All the configurations needed will in this directory and the demo app will be unter the `demo` directory. 
 
 ```
-~/calico-fortinet$ tree .
-.
-|-- 0-install-kubeadm.sh
-|-- 1-kubeadm-init-config.yaml
-|-- 1-kubeadm-join-config.yaml
-|-- 2-ebs-storageclass.yaml
-|-- 3-loadbalancer.yaml
-`-- 4-firewall-config.yaml
-└── demo
-    ├── storefront-demo.yaml
-    └── tiers-demo.yaml
+|-- configs
+|   |-- 0-install-kubeadm.sh
+|   |-- 1-kubeadm-init-config.yaml
+|   |-- 1-kubeadm-join-config.yaml
+|   |-- 2-ebs-storageclass.yaml
+|   |-- 3-loadbalancer.yaml
+|   |-- 4-firewall-config.yaml
+|   |-- dockerjsonconfig.json
+|   `-- license.yaml
+|-- demo
+|   |-- storefront-demo.yaml
+|   `-- tiers-demo.yaml
 ```
 
 
-1.  Copy the `1-kubeadm-init-config.yaml` file to the `master` node. 
-
-
-  ```
-  $ scp 1-kubeadm-config.yaml ubuntu@<MASTER_IP>:/home/ubuntu
-  ```
-
-2. SSH into the `master` node using its private IP. Then update the `1-kubeadm-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). Now you can create a new cluster configruation file based on this config. 
+1. SSH into the `master` node, then update the `1-kubeadm-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configruation file based on this config. 
 
 ```
+$ hostname -f
+ip-10-99-1-X.us-west-2.compute.internal
+
 $ cat 1-kubeadm-config.yaml
-
   apiVersion: kubeadm.k8s.io/v1beta2
 bootstrapTokens:
 - groups:
@@ -56,7 +52,7 @@ localAPIEndpoint:
   bindPort: 6443
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
-  name: master                           # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
+  name: ip-10-99-1-X.us-west-2.compute.internal      # UPDATE THIS WITH THE MASTER FQDN
   taints:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
@@ -97,7 +93,7 @@ controllerManager:
 2. Now you can launch kubernetes using kubeadm (On the `master` node)
 
   ```
-  $ sudo kubeadm init --config 1-kubeadm-config.yaml
+  $ sudo kubeadm init --config 1-kubeadm-init-config.yaml
   W0923 20:55:22.992192    8924 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
   [init] Using Kubernetes version: v1.19.0
   [preflight] Running pre-flight checks
@@ -180,13 +176,11 @@ controllerManager:
   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
   ```
 
-  
-4. Copy the `/etc/kubernetes/admin.conf` to the `jumphost` and run through the same commands below. You need to run the following as a regular user:
+4. Verify that you can issue `kubectl` commands. The `master` node will be in the `NotReady` state until Calico us deployed.
 
 ```
-    mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+$ kubectl get nodes
+NAME                                        STATUS   ROLES    AGE   VERSION
+ip-10-99-1-150.us-west-2.compute.internal   NotReady    master   20h   v1.19.3
 ```
 
-This will allow you to issue `kubectl` commands from the `jumphost`. You can use the `master` node as well. 
