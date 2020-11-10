@@ -18,7 +18,7 @@
         apiServerEndpoint: "MASTER_PRIVATE_IP:6443"      # UPDATE to reflect MASTER PRIVATE IP
         caCertHashes: ["sha256:2a78c74c95db246c9d711276d1d0c9956cd36e765a1181519ab0f03a037488b6"]  # UPDATE based on kubeadm init output
     nodeRegistration:
-    name: ip-10-99-2-X.us-west-2.compute.internal    # UPDATE with Full Hostname 
+    name: ip-10-99-2-X.us-west-2.compute.internal    # UPDATE with Full Hostname of Local Worker Node
     kubeletExtraArgs:
         cloud-provider: aws
 ```

@@ -33,7 +33,7 @@ ubuntu@ip-10-99-2-212:~$
     - calicoctl
 
 
-4. Copy the script file to the  `worker-1`, and `worker-2` nodes and run it on **all four nodes** including the `master`
+4. Copy the script file to the  `worker-1`, and `worker-2` nodes and run it on **all three nodes** including the `master`
 
     ```
         $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-1_IP>:/home/ubuntu

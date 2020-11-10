@@ -31,13 +31,13 @@ You will find some configuration files and `demo` directory in the `master` node
 ```
 
 
-1. SSH into the `master` node, then update the `1-kubeadm-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configruation file based on this config. 
+1. SSH into the `master` node, then update the `1-kubeadm-init-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configruation file based on this config. 
 
 ```
 $ hostname -f
 ip-10-99-1-X.us-west-2.compute.internal
 
-$ cat 1-kubeadm-config.yaml
+$ cat 1-kubeadm-init-config.yaml
   apiVersion: kubeadm.k8s.io/v1beta2
 bootstrapTokens:
 - groups:
