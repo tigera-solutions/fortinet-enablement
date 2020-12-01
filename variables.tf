@@ -69,3 +69,8 @@ variable "bootstrap-fgtvm" {
   type    = string
   default = "fgtvm.conf"
 }
+
+// resource prefix variable
+variable "resource_prefix" {
+  default = "califn-"
+}
