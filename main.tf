@@ -154,19 +154,19 @@ resource "aws_security_group" "default" {
 
 resource "aws_iam_role" "k8s-access-role" {
   name               = "k8s-access-role"
-  assume_role_policy = "${file("iamrole.json")}"
+  assume_role_policy = file("iamrole.json")
 }
 
 resource "aws_iam_policy" "k8s-access-policy" {
   name        = "k8s-access-policy"
   description = "k8s aws controller policy"
-  policy      = "${file("iampolicy.json")}"
+  policy      = file("iampolicy.json")
 }
 
 resource "aws_iam_policy_attachment" "k8s-policy-attach" {
   name       = "policy-attach"
-  roles      = ["${aws_iam_role.k8s-access-role.name}"]
-  policy_arn = "${aws_iam_policy.k8s-access-policy.arn}"
+  roles      = [aws_iam_role.k8s-access-role.name]
+  policy_arn = aws_iam_policy.k8s-access-policy.arn
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
@@ -364,8 +364,8 @@ resource "aws_instance" "fgtvm" {
 }
 
 data "template_file" "FortiGate" {
-  template = "${file("${var.bootstrap-fgtvm}")}"
+  template = file(var.bootstrap-fgtvm)
   vars = {
-    adminsport = "${var.adminsport}"
+    adminsport = var.adminsport
   }
 }
