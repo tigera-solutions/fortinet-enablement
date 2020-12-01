@@ -20,7 +20,7 @@ resource "aws_vpc" "fortinet-calico-vpc" {
   enable_classiclink   = false
   instance_tenancy     = "default"
   tags = {
-    Name = "fortinet-calico-vpc"
+    Name = "${var.resource_prefix}fortinet-calico-vpc"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_subnet" "fortinet-calico-pvt-subnet" {
   availability_zone = var.az1
   map_public_ip_on_launch = true
   tags = {
-    Name = "fortinet-calico-pvt-subnet",
+    Name = "${var.resource_prefix}fortinet-calico-pvt-subnet",
     "kubernetes.io/cluster/kubernetes" = "owned",
     "kubernetes.io/role/internal-elb" = "1"
   }
@@ -44,7 +44,7 @@ resource "aws_subnet" "fortinet-calico-pub-subnet" {
   availability_zone = var.az1
   map_public_ip_on_launch = true
   tags = {
-    Name = "fortinet-calico-pub-subnet",
+    Name = "${var.resource_prefix}fortinet-calico-pub-subnet",
     "kubernetes.io/cluster/kubernetes" = "owned",
     "kubernetes.io/role/elb" = "1"
   }
@@ -54,7 +54,7 @@ resource "aws_subnet" "fortinet-calico-pub-subnet" {
 resource "aws_internet_gateway" "fortinet-calico-igw" {
   vpc_id = aws_vpc.fortinet-calico-vpc.id
   tags = {
-    Name = "fortinet-calico-igw"
+    Name = "${var.resource_prefix}fortinet-calico-igw"
   } 
 }
 
@@ -62,14 +62,14 @@ resource "aws_internet_gateway" "fortinet-calico-igw" {
 resource "aws_route_table" "fortinet-calico-public-rt" {
   vpc_id = aws_vpc.fortinet-calico-vpc.id
   tags = {
-    Name = "fortinet-calico-public-rt"
+    Name = "${var.resource_prefix}fortinet-calico-public-rt"
   }
 }
 
 resource "aws_route_table" "fortinet-calico-private-rt" {
   vpc_id = aws_vpc.fortinet-calico-vpc.id
   tags = {
-    Name = "fortinet-calico-private-rt"
+    Name = "${var.resource_prefix}fortinet-calico-private-rt"
   }
 }
 
@@ -153,12 +153,12 @@ resource "aws_security_group" "default" {
 ## IAM Role and Policy for k8s Nodes
 
 resource "aws_iam_role" "k8s-access-role" {
-  name               = "k8s-access-role"
+  name               = "${var.resource_prefix}k8s-access-role"
   assume_role_policy = file("iamrole.json")
 }
 
 resource "aws_iam_policy" "k8s-access-policy" {
-  name        = "k8s-access-policy"
+  name        = "${var.resource_prefix}k8s-access-policy"
   description = "k8s aws controller policy"
   policy      = file("iampolicy.json")
 }
@@ -170,7 +170,7 @@ resource "aws_iam_policy_attachment" "k8s-policy-attach" {
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name  = "instance_profile"
+  name  = "${var.resource_prefix}instance_profile"
   role = aws_iam_role.k8s-access-role.name
 }
 
@@ -206,7 +206,7 @@ resource "aws_instance" "master" {
   }
 
   tags = {
-    Name = "master",
+    Name = "${var.resource_prefix}master",
     "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
@@ -228,7 +228,7 @@ resource "aws_instance" "worker-1" {
     volume_type = "standard"
   }
   tags = {
-    Name = "worker-1",
+    Name = "${var.resource_prefix}worker-1",
     "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
@@ -249,7 +249,7 @@ resource "aws_instance" "worker-2" {
     volume_type = "standard"
   }
   tags = {
-    Name = "worker-2",
+    Name = "${var.resource_prefix}worker-2",
     "kubernetes.io/cluster/kubernetes" = "owned"
   }
 
@@ -304,7 +304,7 @@ resource "aws_instance" "fmrvm" {
   }
 
   tags = {
-    Name = "FortiManagerVM"
+    Name = "${var.resource_prefix}FortiManagerVM"
   }
 }
 
@@ -359,7 +359,7 @@ resource "aws_instance" "fgtvm" {
   }
 
   tags = {
-    Name = "FortiGateVM"
+    Name = "${var.resource_prefix}FortiGateVM"
   }
 }
 

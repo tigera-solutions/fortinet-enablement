@@ -23,6 +23,8 @@ Goal: this module sets up your AWS environment using Terraform.
         }
     ```
 
+    >If you want to create multiple environments or change the default prefix for the resources to be provisioned, adjust `resource_prefix` variable in the `variables.tf` file.
+
 3. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances. 
 
 > Note: If you never accepted Terms of Use for using Fortigate & FortiManager Pay-As-You-Go, you will be required to do so and the operation will fail and point you to the URL to go through that process.
