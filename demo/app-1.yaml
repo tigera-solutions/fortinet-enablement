@@ -1,0 +1,83 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ns1
+  labels:
+    compliance: open
+    env: dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-1
+  namespace: ns1
+spec:
+  selector:
+    matchLabels:
+      app: app-1
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: app-1
+        tigera.io/address-group: app-1-address-group 
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-2
+  namespace: ns1
+spec:
+  selector:
+    matchLabels:
+      app: app-2
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: app-2
+        tigera.io/address-group: app-2-address-group 
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-1-svc
+  namespace: ns1
+  labels:
+    service: app-1-svc
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-2-svc
+  namespace: ns1
+  labels:
+    service: app-2-svc
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx

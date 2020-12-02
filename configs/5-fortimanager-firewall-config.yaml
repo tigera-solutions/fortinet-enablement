@@ -1,0 +1,18 @@
+# Configuration of Tigera Fortimanager Integration Controller
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: tigera-fortimanager-controller-configs
+  namespace: tigera-firewall-controller
+data:
+  tigera.firewall.fortimanager-policies: |
+    - name: fortimgr
+      ip: 10.99.1.33   ####### UPDATE with FortiManager Private IP
+      username: tigera_fortimanager_admin
+      adom: root
+      packagename: default
+      tier: fortimanager
+      password:
+        secretKeyRef:
+          name: fortimgr
+          key: fortimgr-pwd

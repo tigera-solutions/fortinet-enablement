@@ -3,7 +3,22 @@
 
 ## Summary and Goals
 
-As a platform and security engineers, you want your apps to securely communicate with the external world. But you also want to secure the network traffic from the Kubernetes clusters using your Fortinet security fabricc. Using the Fortinet/Calico Enterprise integration, security teams can retain firewall responsibility, secure traffic using Calico Enterprise network policy, which frees up time for ITOps.
+As a platform and security engineers, you want your apps to securely communicate with the external world. But you also want to secure the network traffic from the Kubernetes clusters using your Fortinet security fabric. Using the Fortinet/Calico Enterprise integration, security teams can retain firewall responsibility, secure traffic using Calico Enterprise network policy, which frees up time for ITOps. There are currently two solutions that this integration provides:
+
+### Solution 1: Extend Kubernetes to Fortinet firewall devices
+**Use case:** Control egress traffic for Kubernetes clusters.
+
+**Problem:** Perimeter firewalls do not have the necessary information to act on traffic that leaves the cluster for Kubernetes workloads.
+
+**Solution:** The Calico Enterprise/Fortinet integration leverages the power of Calico Enterprise policy selectors to provide Kubernetes workload information to FortiManager and FortiGate devices. You create perimeter firewall policies in FortiManager and FortiGate that reference Kuberetes workloads. Policies are applied and enforced by FortiGate devices. And Firewall administrators can write cluster egress policies that reference Kubernetes workloads directly in Fortinet devices.
+
+### Solution 2: Extend FortiManager firewall policies to Kubernetes
+**Use case:** Control Kubernetes clusters directly and apply policy.
+**Problem:** To avoid disruption, teams need to leverage existing FortiManager as the primary user interface.
+
+**Solution:** Use FortiManager to create firewall policies that are applied as Calico Enterprise network policies on Kubernetes workloads. Use the power of a Calico Enterprise “higher-order tier” so Kubernetes policy is evaluated early in the policy processing order, but update policy using FortiManager UI. Use the Calico Enterprise Manager UI as a secondary interface to verify the integration and troubleshoot using logs.
+
+## Goals
 
 The goal of this enabelemnt tutorial is to demonstrate the value of the Fortinet + Calico Enterprise integration by going through a series of learning modules focused on Calico's Integration with Fortigate and FortiManager.
 
@@ -45,9 +60,10 @@ Below is an architecture diagram of the various components that will be deployed
 - [Module 6: Joining Worker Nodes](./modules/join-nodes.md)
 - [Module 7: Installing and Configuring Calico Enterprise](./modules/installing-calico.md)
 - [Module 8: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
-- [Module 9: Integrating Calico Enterprise with FortiManager and FortiGate](./modules/integrate-calico-fortigate.md)
-- [Module 10: Running a Sample Application](./modules/deploy-app.md)
-
+- [Module 9: Integrating Calico Enterprise with FortiGate](./modules/integrate-calico-fortigate.md)
+- [Module 10: Running a Sample Application to validate Calico + FortiGate Integration](./modules/deploy-app-0.md)
+- [Module 11: Integrating Calico Enterprise with FortiManager](../modules/integrate-calico-fortimanager.md)
+- [Module 12: Running a Sample Application to validate Calico + FortiManager Integration](./modules/deploy-app-1.md)
 
 ### Cleanup
 
