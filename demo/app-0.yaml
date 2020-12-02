@@ -1,0 +1,44 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ns0
+  labels:
+    compliance: open
+    env: dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-0
+  namespace: ns0
+spec:
+  selector:
+    matchLabels:
+      app: app-0
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app-0
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-0-svc
+  namespace: ns0
+  labels:
+    service: app-0-svc
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx

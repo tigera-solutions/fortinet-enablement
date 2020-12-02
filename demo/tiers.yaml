@@ -1,7 +1,14 @@
 apiVersion: projectcalico.org/v3
 kind: Tier
 metadata:
-  name: fortinet
+  name: fortigate
+spec:
+  order: 900
+---
+apiVersion: projectcalico.org/v3
+kind: Tier
+metadata:
+  name: fortimanager
 spec:
   order: 800
 ---
@@ -22,9 +29,34 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: fortinet.pass
+  name: fortigate.pass
 spec:
-  tier: fortinet
+  tier: fortigate
+  order: 300
+  selector: ''
+  namespaceSelector: ''
+  serviceAccountSelector: ''
+  ingress:
+    - action: Pass
+      source: {}
+      destination: {}
+  egress:
+    - action: Pass
+      source: {}
+      destination: {}
+  doNotTrack: false
+  applyOnForward: false
+  preDNAT: false
+  types:
+    - Ingress
+    - Egress
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: fortimanager.pass
+spec:
+  tier: fortimanager
   order: 300
   selector: ''
   namespaceSelector: ''
@@ -97,10 +129,10 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: fortinet.storefront-fortigate
+  name: fortigate.app-0-policy
 spec:
-  tier: fortinet
-  selector: app == "microservice2"
+  tier: fortigate
+  selector: app == "app-0"
   namespaceSelector: ''
   serviceAccountSelector: ''
   egress:
