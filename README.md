@@ -62,7 +62,7 @@ Below is an architecture diagram of the various components that will be deployed
 - [Module 8: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
 - [Module 9: Integrating Calico Enterprise with FortiGate](./modules/integrate-calico-fortigate.md)
 - [Module 10: Running a Sample Application to validate Calico + FortiGate Integration](./modules/deploy-app-0.md)
-- [Module 11: Integrating Calico Enterprise with FortiManager](../modules/integrate-calico-fortimanager.md)
+- [Module 11: Integrating Calico Enterprise with FortiManager](./modules/integrate-calico-with-fortimanager.md)
 - [Module 12: Running a Sample Application to validate Calico + FortiManager Integration](./modules/deploy-app-1.md)
 
 ### Cleanup
