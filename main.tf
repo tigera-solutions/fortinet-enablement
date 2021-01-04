@@ -190,7 +190,7 @@ resource "aws_instance" "master" {
   subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
 
   ebs_block_device {
-    device_name = "/dev/sdb"
+    device_name = "/dev/sda1"
     volume_size = "30"
     volume_type = "standard"
   }
@@ -223,7 +223,7 @@ resource "aws_instance" "worker-1" {
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
   ebs_block_device {
-    device_name = "/dev/sdb"
+    device_name = "/dev/sda1"
     volume_size = "30"
     volume_type = "standard"
   }
@@ -244,7 +244,7 @@ resource "aws_instance" "worker-2" {
   subnet_id = aws_subnet.fortinet-calico-pvt-subnet.id
 
   ebs_block_device {
-    device_name = "/dev/sdb"
+    device_name = "/dev/sda1"
     volume_size = "30"
     volume_type = "standard"
   }
@@ -288,7 +288,7 @@ resource "aws_instance" "fmrvm" {
   }
 
   ebs_block_device {
-    device_name = "/dev/sdb"
+    device_name = "/dev/sda1"
     volume_size = "80"
     volume_type = "standard"
   }
@@ -343,7 +343,7 @@ resource "aws_instance" "fgtvm" {
   }
 
   ebs_block_device {
-    device_name = "/dev/sdb"
+    device_name = "/dev/sda1"
     volume_size = "80"
     volume_type = "standard"
   }
