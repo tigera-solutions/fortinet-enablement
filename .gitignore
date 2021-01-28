@@ -1,2 +1,7 @@
 .*
 !/.gitignore
+*.tfstate
+*.tfstate.backup
+*.tfvars
+configs/license.yaml
+configs/dockerjsonconfig.json

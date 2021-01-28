@@ -76,7 +76,7 @@ spec:
     targetPort: 80
     protocol: TCP
   selector:
-    app: nginx
+    app: app-1
 ---
 apiVersion: v1
 kind: Service
@@ -91,7 +91,7 @@ spec:
     targetPort: 80
     protocol: TCP
   selector:
-    app: nginx
+    app: app-2
 ```
 
 This deployment creates two sample `nginx` deployments in `ns1` called `app-1` and `app-2`. Our goal here is to configurate FortiManager Policy Packages to secure these two applications using Calico Policies. You will notice that we have a label `tigera.io/address-group` that identifies which FortiManager Address Group this application belongs to. In our case the values are `app-1-address-group` and `app-2-address-group`. Let's deploy the app:
