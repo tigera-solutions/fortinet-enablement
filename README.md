@@ -59,11 +59,12 @@ Below is an architecture diagram of the various components that will be deployed
 - [Module 5: Creating Your Kubernetes Cluster](./modules/creating-your-k8s-cluster.md)
 - [Module 6: Joining Worker Nodes](./modules/join-nodes.md)
 - [Module 7: Installing and Configuring Calico Enterprise](./modules/installing-calico.md)
-- [Module 8: Integrating FortiManager with FortiGate](./modules/integrate-fortigate-fortimanager.md)
-- [Module 9: Integrating Calico Enterprise with FortiGate](./modules/integrate-calico-fortigate.md)
-- [Module 10: Running a Sample Application to validate Calico + FortiGate Integration](./modules/deploy-app-0.md)
-- [Module 11: Integrating Calico Enterprise with FortiManager](./modules/integrate-calico-with-fortimanager.md)
-- [Module 12: Running a Sample Application to validate Calico + FortiManager Integration](./modules/deploy-app-1.md)
+- [Module 8: Integrating Calico Enterprise with FortiGate](./modules/integrate-calico-fortigate.md)
+- [Module 9: Running a Sample Application to validate Calico + FortiGate Integration](./modules/deploy-app-0.md)
+- [Module 10: Integrating FortiGate with FortiManager](./modules/integrate-fortigate-fortimanager.md)
+- [Module 11: Manage North-South policies with FortiManager](./modules/manage-north-south-policies-with-fortimanager.md)
+- [Module 12: Integrating Calico Enterprise with FortiManager for East-West policy management](./modules/integrate-calico-with-fortimanager.md)
+- [Module 13: Running a Sample Application to validate Calico + FortiManager Integration](./modules/deploy-app-1.md)
 
 ### Cleanup
 

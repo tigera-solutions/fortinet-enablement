@@ -1,14 +1,12 @@
-# Module 10: Running a Sample Application to test the Calcio+FortiGate Integration
+# Module 9: Running a Sample Application to test the Calcio+FortiGate Integration
 
 **Goal:** We are now ready to verify the integration by launching an application and scaling its pods to ensure that the pods' IPs are automatically populated in FortiGate.
-
 
 ## Steps
 
 1. Under the `demo` subdirectory, there is a `tiers.yaml` and `app-0.yaml` deployment files. Let's take a look at the `tiers.yaml`:
 
-
-```
+```yaml
 apiVersion: projectcalico.org/v3
 kind: Tier
 metadata:
@@ -176,7 +174,6 @@ app-0-5f7f5dcfc9-tmpfr   1/1     Running   0          13m
 
 3. In the FortiGate portal, navigate to **Policy & Objects > Addresses**. Once the application is deployed, you should see that an **app-0-policy** address group is created and the respective Node IPs are associated with it.
 
-
 ![img](../img/forti-address-group-v1.png)
 
 4. It's time to showcase what would happen as we scale the `app-0` service. As we increase the number of pods, we should see the Address Group in FortiGate reflect the nodes that the pods are deployed in.
@@ -187,7 +184,12 @@ $ kubectl scale deployment/app-0 -n ns0 --replicas=2
 
 ![img](../img/forti-address-group-v2.png)
 
+5. You can now explore creating policies within FortiGate that use this address group.
 
-5. You can now explore creating policies within FortiGate that use this address group!
+Create a policy in FortiGate, e.g. `app-0.http-access`, which controls HTTP access for `app-0` address group. Test HTTP access from `app-0` pods while switching the policy action between `ACCEPT` and `DENY`.
 
+  ![img](../img/fortigate-http-access-policy.png)
 
+```bash
+kubectl -n ns0 exec -t centos -- curl gooble.com
+```

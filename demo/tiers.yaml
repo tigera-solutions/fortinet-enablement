@@ -1,14 +1,14 @@
 apiVersion: projectcalico.org/v3
 kind: Tier
 metadata:
-  name: fortigate
+  name: fortimanager
 spec:
   order: 900
 ---
 apiVersion: projectcalico.org/v3
 kind: Tier
 metadata:
-  name: fortimanager
+  name: fortigate
 spec:
   order: 800
 ---

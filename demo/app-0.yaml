@@ -6,6 +6,22 @@ metadata:
     compliance: open
     env: dev
 ---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos
+  namespace: ns0
+  labels:
+    name: centos
+    app: app-0
+spec:
+  containers:
+  - name: centos
+    image: centos:latest
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]
+    resources: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

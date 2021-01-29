@@ -19,6 +19,16 @@ data:
         secretKeyRef:
           name: fortigate
           key: fortigate-key
+  # This part required when using FortiManager integration
+  # tigera.firewall.fortimgr: |
+  #   - name: fortimgr
+  #     ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
+  #     username: tigera_fortimanager_admin
+  #     adom: root
+  #     password:
+  #       secretKeyRef:
+  #         name: fortimgr
+  #         key: fortimgr-pwd
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -6,6 +6,23 @@ metadata:
     compliance: open
     env: dev
 ---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos
+  namespace: ns0
+  labels:
+    name: centos
+    app: app-1
+    tigera.io/address-group: ns1-centos-address-group
+spec:
+  containers:
+  - name: centos
+    image: centos:latest
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]
+    resources: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

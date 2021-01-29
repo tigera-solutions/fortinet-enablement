@@ -1,8 +1,8 @@
-# Module 8: Integrating FortiGate with FortiManager
+# Module 10: Integrating FortiGate with FortiManager
 
 **Goal:** Integrate FortiGate with FortiManager.
 
-### Steps
+## Steps
 
 1. From your browser, access FortiManager's IP using the output IP.
 
@@ -12,7 +12,10 @@
 
 4. Log In to FortiManager using the new password.
 
-5. Add the FortiGate by going to **Add Device > Discover Device**. Provide FortiGate's **Private IP/Username/Password** and click **Next**. Follow the instrctions until the device is added then click **Finish**
+5. Add the FortiGate by going to **Add Device > Discover Device**. Provide FortiGate's **Private IP/Username/Password** and click **Next**. Follow the instructions until the device is added.
 
+    ![img](../img/fortigate_device_add.png)
 
-![img](../img/fortigate_device_add.png)
+6. If prompted to import `policies and objects` for added device, go ahead and import the objects. Follow the wizard steps to review imported objects and complete the import.
+
+    ![img](../img/fortigate_import_objects.png)
