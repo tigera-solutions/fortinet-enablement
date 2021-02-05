@@ -103,17 +103,23 @@ resource "aws_eip" "FGTPublicIP" {
   depends_on        = [aws_instance.fgtvm]
   vpc               = true
   network_interface = aws_network_interface.eth0.id
+  tags = {
+    Name = "${var.resource_prefix}fortigate-eip",
+  }
 }
 
 resource "aws_eip" "FMRPublicIP" {
   depends_on        = [aws_instance.fgtvm]
   vpc               = true
   network_interface = aws_network_interface.fmrvm_eth0.id
+  tags = {
+    Name = "${var.resource_prefix}fortimanager-eip",
+  }
 }
 
 # Our default security group
 resource "aws_security_group" "default" {
-  name        = "calico-fortinet-sg"
+  name        = "${var.resource_prefix}calico-fortinet-sg"
   description = "Used in the terraform"
   vpc_id      = aws_vpc.fortinet-calico-vpc.id
 

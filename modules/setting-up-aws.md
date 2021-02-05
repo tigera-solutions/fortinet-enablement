@@ -23,6 +23,15 @@ Goal: this module sets up your AWS environment using Terraform.
         }
     ```
 
+    To find appropriate FortiGate and FortiManager AMI for your region, you can use either [AWS Marketplace website](https://aws.amazon.com/marketplace/seller-profile?id=243a3a4c-e35a-49b0-9061-3f354bb2254e) or `aws-cli`. Use `ONDEMAND` AMI if you don't have Fortinet license and intend to use Pay-As-You-Go licensing.
+
+    ```bash
+    # list FortiGate images for chosen region
+    aws ec2 describe-images --query 'Images[*].[CreationDate,Name,ImageId]' --filters "Name=name,Values=*FortiGate*" --region us-west-2 --output table | sort -r
+    # list FortiManager images for chosen region
+    aws ec2 describe-images --query 'Images[*].[CreationDate,Name,ImageId]' --filters "Name=name,Values=*FortiManager*" --region us-west-2 --output table | sort -r
+    ```
+
     >If you want to create multiple environments or change the default prefix for the resources to be provisioned, adjust `resource_prefix` variable in the `variables.tf` file.
 
 3. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances. 

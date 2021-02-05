@@ -31,23 +31,23 @@ variable "privatecidraz1" {
 # Ubuntu 20.04 LTS (x64)
 variable "aws_amis" {
   default = {
-    us-west-2 = "ami-01a5f3ee4a9903e77"
+    us-west-2 = "ami-0928f4202481dfdf6"
   }
 }
 
-// AMIs are for FGTVM-AWS(PAYG) - 6.4.2
+// AMIs are for FGTVM-AWS(PAYG) - 6.4.4
 variable "fgtvmami" {
   type = map
   default = {
-    us-west-2= "ami-03ee081dace39500a"
+    us-west-2= "ami-00b7c2fdcc89f090a"
   }
 }
 
-// AMIs are for FMRVM-AWS(PAYG) 
+// AMIs are for FMRVM-AWS(PAYG) - 6.4.4
 variable "fmrvmami" {
   type = map
   default = {
-    us-west-2= "ami-00794bab7e9fd778a"
+    us-west-2= "ami-08acdd33410d45c74"
   }
 }
 
