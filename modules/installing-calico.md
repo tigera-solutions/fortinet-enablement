@@ -129,7 +129,7 @@ kubectl create -f https://docs.tigera.io/manifests/tigera-policies.yaml
   echo $calicoToken
 
   # Get the Kibana Login (Username is **elastic**)
-  export elasticToken=$(kubectl get -n tigera-elasticsearch secret tigera-secure-es-elastic-user -o go-template='{{.data.elastic | base64decode}})
+  export elasticToken=$(kubectl get -n tigera-elasticsearch secret tigera-secure-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
 
   echo $elasticToken
   ```
