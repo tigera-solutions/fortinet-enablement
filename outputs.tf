@@ -34,6 +34,10 @@ output "FortiManagerPublicIP" {
   value = aws_eip.FMRPublicIP.public_ip
 }
 
+output "FortiManagerPrivateIP" {
+  value = aws_instance.fmrvm.private_ip
+}
+
 output "FortiManagerUsername" {
   value = "admin"
 }
