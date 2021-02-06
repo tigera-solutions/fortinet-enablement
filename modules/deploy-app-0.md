@@ -191,5 +191,5 @@ Create a policy in FortiGate, e.g. `app-0.http-access`, which controls HTTP acce
   ![img](../img/fortigate-http-access-policy.png)
 
 ```bash
-kubectl -n ns0 exec -t centos -- curl gooble.com
+kubectl -n ns0 exec -t centos -- curl google.com
 ```
