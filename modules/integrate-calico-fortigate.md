@@ -19,11 +19,11 @@ a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that 
 
 b. Go to Fortigate from your browser and under **System> Admin Profiles**  tab, create a new profile called `tigera_api_user_profile` with `read-write` access to **Firewall > Addresss**.
 
-    ![img](../img/fortigate-profile.png)
+  ![img](../img/fortigate-profile.png)
 
 c. Under **Administrators** tab,  Create a **REST API Administrator** user called `calico_enterprise_api_user` and associate this user with the `tigera_api_user_profile` profile and add CIDR or IP address of your kubernetes cluster nodes as trusted hosts. Ensure that you toggle the "Trusted Hosts" section to include the `10.99.0.0/16` CIDR.
 
-    ![img](../img/fortigate-user.png)
+  ![img](../img/fortigate-user.png)
 
 d. Note the API key.
 
