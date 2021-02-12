@@ -19,3 +19,5 @@
 6. If prompted to import `policies and objects` for added device, go ahead and import the objects. Follow the wizard steps to review imported objects and complete the import.
 
     ![img](../img/fortigate_import_objects.png)
+
+[Next -> Module 11](./modules/manage-north-south-policies-with-fortimanager.md)

@@ -11,27 +11,27 @@ You determine the Kubernetes pods that you want to allow access outside the fire
 In your Kubernetes cluster, if pods IP addresses are routable and address selection is `pod`, then it populates the Kubernetes pod IPs of selector matching pods in FortiGate address group objects or
 If source address selection is `node`, then populates the Kubernetes node IPs of selector matching pods in Fortigate address group objects.
 
-### Steps
+## Steps
 
 1. **Configure FortiGate firewall to communicate with firewall controller:**
 
-a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
+    a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
 
-b. Go to Fortigate from your browser and under **System> Admin Profiles**  tab, create a new profile called `tigera_api_user_profile` with `read-write` access to **Firewall > Addresss**.
+    b. Go to Fortigate from your browser and under **System> Admin Profiles**  tab, create a new profile called `tigera_api_user_profile` with `read-write` access to **Firewall > Addresss**.
 
-  ![img](../img/fortigate-profile.png)
+      ![img](../img/fortigate-profile.png)
 
-c. Under **Administrators** tab,  Create a **REST API Administrator** user called `calico_enterprise_api_user` and associate this user with the `tigera_api_user_profile` profile and add CIDR or IP address of your kubernetes cluster nodes as trusted hosts. Ensure that you toggle the "Trusted Hosts" section to include the `10.99.0.0/16` CIDR.
+    c. Under **Administrators** tab,  Create a **REST API Administrator** user called `calico_enterprise_api_user` and associate this user with the `tigera_api_user_profile` profile and add CIDR or IP address of your kubernetes cluster nodes as trusted hosts. Ensure that you toggle the "Trusted Hosts" section to include the `10.99.0.0/16` CIDR.
 
-  ![img](../img/fortigate-user.png)
+    ![img](../img/fortigate-user.png)
 
-d. Note the API key.
+    d. Note the API key.
 
 2. **Configure Calico Enterprise**
 
-a. From the master node, you will configure Calico Enterprise. You need to fill in your FortiGate **Private IP** from the `10.99.1.X` subnet in the `4-fortigate-firewall-config.yaml` ConfigMap then apply it.
+    From the master node, you will configure Calico Enterprise. You need to fill in your FortiGate **Private IP** from the `10.99.1.X` subnet in the `4-fortigate-firewall-config.yaml` ConfigMap then apply it.
 
->If you integrated FortiGate with FortiManager, and imported FortiGate objects, then configure FortiManager connection as well. For that, comment out the FortiManager related section in `4-fortigate-firewall-config.yaml` file, and update `ip` field with your FortiManager's **Private IP**.
+    >If you integrated FortiGate with FortiManager, and imported FortiGate objects, then configure FortiManager connection as well. For that, comment out the FortiManager related section in `4-fortigate-firewall-config.yaml` file, and update `ip` field with your FortiManager's **Private IP**.
 
     ```yaml
     kind: Namespace
@@ -76,53 +76,55 @@ a. From the master node, you will configure Calico Enterprise. You need to fill 
       tigera.firewall.policy.selector: projectcalico.org/tier == 'fortigate'
     ```
 
-Then you can apply it:
+    Then you can apply it:
 
-```
-$ kubectl create -f 4-fortigate-firewall-config.yaml
+    ```
+    $ kubectl create -f 4-fortigate-firewall-config.yaml
 
-namespace/tigera-firewall-controller created
-configmap/tigera-firewall-controller-configs created
-configmap/tigera-firewall-controller created
-```
+    namespace/tigera-firewall-controller created
+    configmap/tigera-firewall-controller-configs created
+    configmap/tigera-firewall-controller created
+    ```
 
 3. **Create FortiGate API User and Key as Kubernetes Secrets.**
 
-a. Store each FortiGate API key as Secret in `tigera-firewall-controller` namespace.
-for example, In the above config map for FortiGate device `fortigate`, store its ApiKey as a secret name as `fortigate`, with key as `fortigate-key`
+    Store each FortiGate API key as Secret in `tigera-firewall-controller` namespace.
+    for example, In the above config map for FortiGate device `fortigate`, store its ApiKey as a secret name as `fortigate`, with key as `fortigate-key`
 
-```
-$ kubectl create secret generic fortigate \
--n tigera-firewall-controller \
---from-literal=fortigate-key=<fortigate-api-secret>
+    ```
+    $ kubectl create secret generic fortigate \
+    -n tigera-firewall-controller \
+    --from-literal=fortigate-key=<fortigate-api-secret>
 
-secret/fortigate created
-```
+    secret/fortigate created
+    ```
 
 4. Deploy firewall controller in the Kubernetes cluster
 
-a. Install your Tigera pull secret in the new namespace we created:
+    a. Install your Tigera pull secret in the new namespace we created:
 
-```
-$ kubectl create secret generic tigera-pull-secret \
---from-file=.dockerconfigjson=<path/to/pull/secret> \
---type=kubernetes.io/dockerconfigjson -n tigera-firewall-controller
+    ```
+    $ kubectl create secret generic tigera-pull-secret \
+    --from-file=.dockerconfigjson=<path/to/pull/secret> \
+    --type=kubernetes.io/dockerconfigjson -n tigera-firewall-controller
 
-secret/tigera-pull-secret created
-```
+    secret/tigera-pull-secret created
+    ```
 
-b. Apply the manifest
+    b. Apply the manifest
 
-```
-kubectl apply -f https://docs.tigera.io/manifests/fortinet.yaml
-```
+    ```
+    kubectl apply -f https://docs.tigera.io/manifests/fortinet.yaml
+    ```
 
 5. Verify that the deployment of the controller is successful:
 
-```
-$ kubectl get pod  -n tigera-firewall-controller
-NAME                                          READY   STATUS    RESTARTS   AGE
-tigera-firewall-controller-586bb9756d-b2qfw   1/1     Running   0          19m
-```
+    ```
+    $ kubectl get pod  -n tigera-firewall-controller
+    NAME                                          READY   STATUS    RESTARTS   AGE
+    tigera-firewall-controller-586bb9756d-b2qfw   1/1     Running   0          19m
+    ```
 
-6. In the case the pod doesn't show as "Running". You can issue `kubectl describe pod <POD_NAME> -n tigera-firewall-controller` and `kubectl logs <POD_NAME> -n tigera-firewall-controller ` to collect additional info on what issue you're hitting.
+6. In the case the pod doesn't show as "Running". You can issue `kubectl describe pod <POD_NAME> -n tigera-firewall-controller` and `kubectl logs <POD_NAME> -n tigera-firewall-controller` to collect additional info on what issue you're hitting.
+
+[Next -> Module 9](./modules/deploy-app-0.md)

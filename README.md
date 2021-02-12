@@ -1,4 +1,5 @@
 # Fortinet and Calico Solution Integration Enablement Workshop
+
 ![intro](https://docs.projectcalico.org/images/intro/performance.png)
 
 ## Summary and Goals
@@ -6,6 +7,7 @@
 As a platform and security engineers, you want your apps to securely communicate with the external world. But you also want to secure the network traffic from the Kubernetes clusters using your Fortinet security fabric. Using the Fortinet/Calico Enterprise integration, security teams can retain firewall responsibility, secure traffic using Calico Enterprise network policy, which frees up time for ITOps. There are currently two solutions that this integration provides:
 
 ### Solution 1: Extend Kubernetes to Fortinet firewall devices
+
 **Use case:** Control egress traffic for Kubernetes clusters.
 
 **Problem:** Perimeter firewalls do not have the necessary information to act on traffic that leaves the cluster for Kubernetes workloads.
@@ -13,6 +15,7 @@ As a platform and security engineers, you want your apps to securely communicate
 **Solution:** The Calico Enterprise/Fortinet integration leverages the power of Calico Enterprise policy selectors to provide Kubernetes workload information to FortiManager and FortiGate devices. You create perimeter firewall policies in FortiManager and FortiGate that reference Kuberetes workloads. Policies are applied and enforced by FortiGate devices. And Firewall administrators can write cluster egress policies that reference Kubernetes workloads directly in Fortinet devices.
 
 ### Solution 2: Extend FortiManager firewall policies to Kubernetes
+
 **Use case:** Control Kubernetes clusters directly and apply policy.
 **Problem:** To avoid disruption, teams need to leverage existing FortiManager as the primary user interface.
 
@@ -24,7 +27,7 @@ The goal of this enabelemnt tutorial is to demonstrate the value of the Fortinet
 
 For reference, you can find the product documentation around this integration [here](https://docs.tigera.io/security/firewall-integration).
 
-## Join the Slack Channel!
+## Join the Slack Channel
 
 We have created a slack channel on the Calico User Group to discuss all things related to Calico + Fortinet. If you are not already a member of the Calico User Group Slack group you can sign up [here](https://slack.projectcalico.org/) and join the #fortinet-integration channel.
 
@@ -35,18 +38,18 @@ We have created a slack channel on the Calico User Group to discuss all things r
 - MacOS or Linux-based machine. Windows w/WSL2 will work but not tested with these instructions.
 - SSH client to connect to AWS resources
 - A public/private SSH key pair created and added in your AWS account and for the specifc region you wish to run this in.
-- Git 
+- Git
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) v0.13+ installed locally.
 
 ## Architecture
 
 Below is an architecture diagram of the various components that will be deployed. They are:
+
 - A VPC with two subnets: one private and one public.
 - An Internet Gateway attached to the Public Subnet
 - A default security group to allow SSH acces, HTTP/HTTPs traffic, and specific TCP ports for Fortigate and FortiManager.
 - Three EC2 instances for k8s: `master`, `worker-1`, and  `worker-2`.
-- A Fortigate and FortiManager VMs (PAYG).
-
+- A FortiGate and FortiManager VMs (PAYG).
 
 ![img](img/arch.png)
 
@@ -85,4 +88,3 @@ Do you really want to destroy all resources?
 
   Enter a value: yes
 ```
-

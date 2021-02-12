@@ -35,11 +35,11 @@ variable "aws_amis" {
   }
 }
 
-// AMIs are for FGTVM-AWS(PAYG) - 6.4.4
+// AMIs are for FGTVM-AWS(PAYG) - 6.2.5
 variable "fgtvmami" {
   type = map
   default = {
-    us-west-2= "ami-00b7c2fdcc89f090a"
+    us-west-2= "ami-05cfe4f5761707079"
   }
 }
 
