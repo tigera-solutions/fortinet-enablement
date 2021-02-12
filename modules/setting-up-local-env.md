@@ -60,4 +60,4 @@
     |   `-- license.yaml
     ```
 
-[Next -> Module 2](./modules/setting-up-aws.md)
+[Next -> Module 2](../modules/setting-up-aws.md)
