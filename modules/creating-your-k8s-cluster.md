@@ -180,4 +180,4 @@ SERVICE CIDR == 192.168.0.0/16
     ip-10-99-1-150.us-west-2.compute.internal   NotReady    master   20h   v1.19.3
     ```
 
-[Next -> Module 6](./modules/join-nodes.md)
+[Next -> Module 6](../modules/join-nodes.md)

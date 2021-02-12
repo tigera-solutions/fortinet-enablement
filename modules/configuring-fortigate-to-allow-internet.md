@@ -14,4 +14,4 @@ Goal: In this step, you will configure FortiGate firewall to act as the default 
 
 ![img2](../img/firewall_policy.png)
 
-[Next -> Module 4](./modules/accessing-your-k8s-nodes.md)
+[Next -> Module 4](../modules/accessing-your-k8s-nodes.md)

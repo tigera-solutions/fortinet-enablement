@@ -87,4 +87,4 @@ The basic workflow is:
     tigera-firewall-controller-fortimanager-policies-ccc4f6f879j8f7   1/1     Running   0          32m
     ```
 
-[Next -> Module 13](./modules/deploy-app-1.md)
+[Next -> Module 13](../modules/deploy-app-1.md)

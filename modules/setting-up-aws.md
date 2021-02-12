@@ -115,4 +115,4 @@ Goal: this module sets up your AWS environment using Terraform.
 
 4. You should now be able to SSH into the `master` VM using its public IP.
 
-[Next -> Module 3](./modules/configuring-fortigate-to-allow-internet.md)
+[Next -> Module 3](../modules/configuring-fortigate-to-allow-internet.md)

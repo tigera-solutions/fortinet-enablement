@@ -34,4 +34,4 @@
 
     In order to preserve any policies configured in FortiGate, we need to import FortiGate policies into FortiManager.
 
-[Next -> Module 12](./modules/integrate-calico-with-fortimanager.md)
+[Next -> Module 12](../modules/integrate-calico-with-fortimanager.md)

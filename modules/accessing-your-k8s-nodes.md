@@ -55,4 +55,4 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     $ scp 1-kubeadm-join-config.yaml ubuntu@<WOERKER-2_IP>:/home/ubuntu
     ```
 
-[Next -> Module 5](./modules/creating-your-k8s-cluster.md)
+[Next -> Module 5](../modules/creating-your-k8s-cluster.md)

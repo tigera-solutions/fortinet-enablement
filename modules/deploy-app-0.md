@@ -194,4 +194,4 @@
     kubectl -n ns0 exec -t centos -- curl google.com
     ```
 
-[Next -> Module 10](./modules/integrate-fortigate-fortimanager.md)
+[Next -> Module 10](../modules/integrate-fortigate-fortimanager.md)

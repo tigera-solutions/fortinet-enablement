@@ -148,4 +148,4 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     $ kubectl delete pod tigera-manager-76b568d7c-4rcbt -n tigera-manager
     ```
 
-[Next -> Module 8](./modules/integrate-calico-fortigate.md)
+[Next -> Module 8](../modules/integrate-calico-fortigate.md)

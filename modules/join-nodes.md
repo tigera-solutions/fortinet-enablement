@@ -53,4 +53,4 @@
     ip-10-99-2-54.us-west-2.compute.internal        NotReady   master   16m     v1.19.2
     ```
 
-[Next -> Module 7](./modules/installing-calico.md)
+[Next -> Module 7](../modules/installing-calico.md)

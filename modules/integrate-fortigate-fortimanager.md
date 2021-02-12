@@ -20,4 +20,4 @@
 
     ![img](../img/fortigate_import_objects.png)
 
-[Next -> Module 11](./modules/manage-north-south-policies-with-fortimanager.md)
+[Next -> Module 11](../modules/manage-north-south-policies-with-fortimanager.md)
