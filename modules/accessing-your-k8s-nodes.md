@@ -34,13 +34,31 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
 
 4. Copy the script file to the  `worker-1`, and `worker-2` nodes and run it on **all three nodes** including the `master`
 
+    a. On `master` node go to `calico-fortinet` directory and set `exec` permission for the script.
+
+    ```
+    $ cd calico-fortinet
+    $ chmod u+x 0-install-kubeadm.sh
+    ```
+
+    b. Copy the script to `worker-1` and `worker-2`.
+
     ```
     $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-1_IP>:/home/ubuntu
     $ scp 0-install-kubeadm.sh ubuntu@<WOERKER-2_IP>:/home/ubuntu
-    ...
-    $ source /home/ubuntu/0-install-kubeadm.sh
-    ....
+    ```
+
+    c. Run the script.
+
+    ```
+    $ source ./0-install-kubeadm.sh
+    ```
+
+    d. Verify that all necessary components were installed.
+
+    ```
     $ which kubelet kubectl docker calicoctl kubeadm
+    
     /usr/bin/kubelet
     /usr/bin/kubectl
     /usr/bin/docker
