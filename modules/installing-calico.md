@@ -66,10 +66,10 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     licensekey.projectcalico.org/default created
     ```
 
-6. Finally ensure that the `apiserver` and `calico` and `log-storage` componenets of Calico Enterprise are working as expected. This means that the Calico CNI is working as expected and now we can join the other nodes.  This step may take some time...
+6. Finally, watch `tigerastatus` resource to ensure that the `apiserver`,`calico`, `log-storage`, and `manager` components of Calico Enterprise report their availability status as `True`. This would mean that the Calico CNI and the enterprise components work as expected. This step may take some time...
 
     ```
-    $ kubectl get tigerastatus
+    $ watch kubectl get tigerastatus
     NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
     apiserver             True        False         False      20h
     calico                True        False         False      11h
@@ -99,7 +99,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
         targetPort: 9443
         protocol: TCP
 
-    $ kubectl create -f 3-loadbalancer.yaml 
+    $ kubectl create -f 3-loadbalancer.yaml
     service/tigera-manager-external created
     ```
 

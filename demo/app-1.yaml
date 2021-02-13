@@ -10,7 +10,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: centos
-  namespace: ns0
+  namespace: ns1
   labels:
     name: centos
     app: app-1

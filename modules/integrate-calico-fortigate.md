@@ -31,7 +31,7 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
 
     From the master node, you will configure Calico Enterprise. You need to fill in your FortiGate **Private IP** from the `10.99.1.X` subnet in the `4-fortigate-firewall-config.yaml` ConfigMap then apply it.
 
-    >If you integrated FortiGate with FortiManager, and imported FortiGate objects, then configure FortiManager connection as well. For that, comment out the FortiManager related section in `4-fortigate-firewall-config.yaml` file, and update `ip` field with your FortiManager's **Private IP**.
+    >If you integrated FortiGate with FortiManager, and imported FortiGate objects, then configure FortiManager connection as well. For that, comment out the FortiManager related section in `4-fortigate-firewall-config.yaml` file, update `ip` field with your FortiManager's **Private IP**, review and adjust other settings. You will also need to create a secret containing FortiManager API user password. Detailed instructions on how to configure FortiManager API user are in following modules.
 
     ```yaml
     kind: Namespace
@@ -56,14 +56,14 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
               name: fortigate
               key: fortigate-key
       # This part required when using FortiManager integration
-      # tigera.firewall.fortimgr: |
+      tigera.firewall.fortimgr: |-
       #   - name: fortimgr
       #     ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
       #     username: tigera_fortimanager_admin
       #     adom: root
       #     password:
       #       secretKeyRef:
-      #         name: fortimgr
+      #         name: fortimgr-ns
       #         key: fortimgr-pwd
     ---
     apiVersion: v1
@@ -105,16 +105,22 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
 
     ```
     $ kubectl create secret generic tigera-pull-secret \
-    --from-file=.dockerconfigjson=<path/to/pull/secret> \
+    --from-file=.dockerconfigjson=/home/ubuntu/calico-fortinet/dockerjsonconfig.json \
     --type=kubernetes.io/dockerconfigjson -n tigera-firewall-controller
 
     secret/tigera-pull-secret created
     ```
 
-    b. Apply the manifest
+    b. Download Fortinet integration manifest
 
     ```
-    kubectl apply -f https://docs.tigera.io/manifests/fortinet.yaml
+    curl -O https://docs.tigera.io/manifests/fortinet.yaml
+    ```
+
+    c. Review and apply the manifest
+
+    ```
+    kubectl apply -f fortinet.yaml
     ```
 
 5. Verify that the deployment of the controller is successful:

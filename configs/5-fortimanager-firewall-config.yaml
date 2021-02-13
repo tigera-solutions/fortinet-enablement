@@ -8,11 +8,11 @@ data:
   tigera.firewall.fortimanager-policies: |
     - name: fortimgr
       ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
-      username: tigera_fortimanager_admin
+      username: tigera_ew_fortimanager_admin
       adom: root
       packagename: default
       tier: fortimanager
       password:
         secretKeyRef:
-          name: fortimgr
+          name: fortimgr-ew
           key: fortimgr-pwd

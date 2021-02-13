@@ -6,6 +6,8 @@
 
 This Calico Enterprise/Fortinet solution lets you directly control Kubernetes policies using FortiManager.
 
+>If you use FortiManager to manage both North-South and East-West policies for Calico enabled Kubernetes cluster, make sure to use a dedicated FortiManager package for each type of policies. For that, set appropriate `packagename` in the East-West integration configuration YAML.
+
 The basic workflow is:
 
 - Determine the Kubernetes pods that you want to securely communicate with each other.
@@ -14,23 +16,33 @@ The basic workflow is:
 - Create firewall policies using the address groups for IPv4 Source address and IPv4 Destination Address, and select services and actions as you normally would to allow or deny the traffic. Under the covers, the Calico Enterprise integration controller periodically reads the FortiManager firewall policies for your Kubernetes cluster, converts them to Calico Enterprise global network policies, and applies them to clusters.
 - Use the Calico Enterprise Manager UI to verify the integration, and then FortiManager UI to make all updates to policy rules.
 
-### Steps
+## Steps
 
 1. **Configure FortiManager to communicate with firewall controller**
 
+    >If you already have a suitable API user profile, you can use it to create `tigera_ew_fortimanager_admin` and skip steps `a` and `b`.
+
     a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
 
-    b.  Go to FortiManager from your browser, from **System Settings**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`. 
+    b. Go to FortiManager from your browser, from **System Settings**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`.
 
-    c. Under **Administrators** tab, create a new user named `tigera_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access.
+    ![fortimanager_user_profile1.png](../img/fortimanager_user_profile1.png)
 
-    ![fortimanager_create_user.png](../img/fortimanager_create_user.png)
+    ![fortimanager_user_profile2.png](../img/fortimanager_user_profile2.png)
 
-    d. Note username (`tigera_fortimanager_admin`) and password you used. 
+    c. Create a policy package that will be dedicated to managing East-West policies. Navigate to **Policy & Objects** -> **Policy Packages** and create a new package `calico-ew`.
+
+    ![fortinet_package_calico_ew.png](../img/fortinet_package_calico_ew.png)
+
+    d. Under **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access.
+
+    ![fortimanager_create_user_ew.png](../img/fortimanager_create_user_ew.png)
+
+    e. Note username (`tigera_ew_fortimanager_admin`) and password you used.
 
 2. **Configure Calico Enterprise**
 
-    From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager  **PRIVATE IP** from the `10.99.1.X` subnet in the `5-fortimanager-firewall-config.yaml` ConfigMap then apply it. 
+    From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager  **PRIVATE IP** from the `10.99.1.X` subnet in the `5-fortimanager-firewall-config.yaml` ConfigMap then apply it.
 
     ```yaml
     # Configuration of Tigera Fortimanager Integration Controller
@@ -43,13 +55,13 @@ The basic workflow is:
       tigera.firewall.fortimanager-policies: |
         - name: fortimgr
           ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
-          username: tigera_fortimanager_admin
+          username: tigera_ew_fortimanager_admin
           adom: root
           packagename: default
           tier: fortimanager
           password:
             secretKeyRef:
-              name: fortimgr
+              name: fortimgr-ew
               key: fortimgr-pwd
     ```
 
@@ -62,20 +74,26 @@ The basic workflow is:
 3. **Create FortiManager API User and Key as Kubernetes Secrets.**
 
     Configure `tigera_fortimanager_admin` user password as a `Secret` in `tigera-firewall-controller` namespace.
-    The password is stored as a Kubernetes `Secret` resource with name `fortimgr`, and key `fortimgr-pwd`.
+    The password is stored as a Kubernetes `Secret` resource with name `fortimgr-ew`, and key `fortimgr-pwd`.
 
     ```
-    $ kubectl create secret generic fortimgr \
+    $ kubectl create secret generic fortimgr-ew \
       -n tigera-firewall-controller \
       --from-literal=fortimgr-pwd=<fortimgr-password>
     ```
 
 4. Deploy firewall controller in the Kubernetes cluster
 
-    Apply the manifest
+    a. Download Fortinet integration manifest
 
     ```
-    kubectl apply -f https://docs.tigera.io/manifests/fortimanager.yaml
+    curl -O https://docs.tigera.io/manifests/fortimanager.yaml
+    ```
+
+    b. Review and apply the manifest
+
+    ```
+    kubectl apply -f fortimanager.yaml
     ```
 
 5. Verify that the deployment of the controller is successful:
