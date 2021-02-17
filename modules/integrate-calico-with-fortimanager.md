@@ -42,7 +42,7 @@ The basic workflow is:
 
 2. **Configure Calico Enterprise**
 
-    From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager  **PRIVATE IP** from the `10.99.1.X` subnet in the `5-fortimanager-firewall-config.yaml` ConfigMap then apply it.
+    From the master node, you will configure Calico Enterprise. You need to fill in your FortiManager  **PRIVATE IP** from the `10.99.1.X` subnet in the `5-fortimanager-firewall-config.yaml` ConfigMap then apply it. Note the `packagename` setting that should specify the name of FortiManager package where you will manage East-West policies for your Kubernetes applications. In our case it's `calico-ew` package name.
 
     ```yaml
     # Configuration of Tigera Fortimanager Integration Controller
@@ -57,7 +57,7 @@ The basic workflow is:
           ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
           username: tigera_ew_fortimanager_admin
           adom: root
-          packagename: default
+          packagename: calico-ew
           tier: fortimanager
           password:
             secretKeyRef:
@@ -82,7 +82,7 @@ The basic workflow is:
       --from-literal=fortimgr-pwd=<fortimgr-password>
     ```
 
-4. Deploy firewall controller in the Kubernetes cluster
+4. **Deploy firewall controller in the Kubernetes cluster.**
 
     a. Download Fortinet integration manifest
 
@@ -105,7 +105,7 @@ The basic workflow is:
     kubectl apply -f fortimanager.yaml
     ```
 
-5. Verify that the deployment of the controller is successful:
+5. **Verify that the deployment of the controller is successful.**
 
     ```bash
     $ kubectl get pod  -n tigera-firewall-controller

@@ -10,7 +10,7 @@ data:
       ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP
       username: tigera_ew_fortimanager_admin
       adom: root
-      packagename: default
+      packagename: calico-ew
       tier: fortimanager
       password:
         secretKeyRef:
