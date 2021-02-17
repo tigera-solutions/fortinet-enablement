@@ -90,7 +90,16 @@ The basic workflow is:
     curl -O https://docs.tigera.io/manifests/fortimanager.yaml
     ```
 
-    b. Review and apply the manifest
+    b. Review the manifest and adjust if needed
+
+    >If you use FortiManager integration for East-West policy management together with Fortinet integration for North-South policy management, some of the resource names may overlap and could result in misconfiguraiton. Make sure the resource names for East-West integraiton differ from those for North-South configuration.
+
+    ```
+    # if East-South integration resources have the same names as North-South integration, rename them to avoid any configuration collisions
+    sed -e '/\s*namespace:\stigera-firewall-controller/b; s/tigera-firewall-controller/tigera-firewall-controller-ew/g' fortimanager.yaml
+    ```
+
+    c. Apply the manifest
 
     ```
     kubectl apply -f fortimanager.yaml
@@ -100,9 +109,9 @@ The basic workflow is:
 
     ```
     $ kubectl get pod  -n tigera-firewall-controller
-    NAME                                                              READY   STATUS    RESTARTS   AGE
-    tigera-firewall-controller-58847b76b-m6b5m                        1/1     Running   0          14m
-    tigera-firewall-controller-fortimanager-policies-ccc4f6f879j8f7   1/1     Running   0          32m
+    NAME                                                                 READY   STATUS    RESTARTS   AGE
+    tigera-firewall-controller-58847b76b-m6b5m                           1/1     Running   0          14m
+    tigera-firewall-controller-ew-fortimanager-policies-ccc4f6f879j8f7   1/1     Running   0          1m
     ```
 
 [Next -> Module 13](../modules/deploy-app-1.md)

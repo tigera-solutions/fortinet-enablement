@@ -37,7 +37,7 @@ spec:
     metadata:
       labels:
         app: app-1
-        tigera.io/address-group: app-1-address-group 
+        tigera.io/address-group: app-1-address-group
     spec:
       containers:
       - name: nginx
@@ -60,7 +60,7 @@ spec:
     metadata:
       labels:
         app: app-2
-        tigera.io/address-group: app-2-address-group 
+        tigera.io/address-group: app-2-address-group
     spec:
       containers:
       - name: nginx
