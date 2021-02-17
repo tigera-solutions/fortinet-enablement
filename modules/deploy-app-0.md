@@ -159,15 +159,15 @@
 
 2. You deploy them:
 
-    ```
-    $ kubectl apply -f tiers.yaml 
-    $ kubectl apply -f app-0.yaml
+    ```bash
+    kubectl apply -f tiers.yaml 
+    kubectl apply -f app-0.yaml
     ```
 
     Verify that the  application is deployed:
 
-    ```
-    $ kubectl get pod -n ns0
+    ```bash
+    kubectl get pod -n ns0
     NAME                     READY   STATUS    RESTARTS   AGE
     app-0-5f7f5dcfc9-tmpfr   1/1     Running   0          13m
     ```
@@ -178,8 +178,8 @@
 
 4. It's time to showcase what would happen as we scale the `app-0` service. As we increase the number of pods, we should see the Address Group in FortiGate reflect the nodes that the pods are deployed in.
 
-    ```
-    $ kubectl scale deployment/app-0 -n ns0 --replicas=2
+    ```bash
+    kubectl scale deployment/app-0 -n ns0 --replicas=2
     ```
 
     ![img](../img/forti-address-group-v2.png)

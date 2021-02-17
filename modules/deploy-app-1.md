@@ -114,13 +114,14 @@
 2. You deploy them:
 
     ```bash
-    $ kubectl apply -f app-1.yaml
+    kubectl apply -f app-1.yaml
     ```
 
     Verify that the  application is deployed:
 
     ```bash
     $ kubectl get pod -n ns1
+    
     NAME                     READY   STATUS    RESTARTS   AGE
     app-1-66db7b7fb9-4kp8h   1/1     Running   1          1h
     app-1-66db7b7fb9-52rq5   1/1     Running   1          1h

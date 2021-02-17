@@ -67,17 +67,17 @@ The basic workflow is:
 
     Then you can apply it:
 
-    ```
-    $ kubectl create -f 5-fortimanager-firewall-config.yaml
+    ```bash
+    kubectl create -f 5-fortimanager-firewall-config.yaml
     ```
 
 3. **Create FortiManager API User and Key as Kubernetes Secrets.**
 
-    Configure `tigera_fortimanager_admin` user password as a `Secret` in `tigera-firewall-controller` namespace.
+    Configure `tigera_ew_fortimanager_admin` user password as a `Secret` in `tigera-firewall-controller` namespace.
     The password is stored as a Kubernetes `Secret` resource with name `fortimgr-ew`, and key `fortimgr-pwd`.
 
-    ```
-    $ kubectl create secret generic fortimgr-ew \
+    ```bash
+    kubectl create secret generic fortimgr-ew \
       -n tigera-firewall-controller \
       --from-literal=fortimgr-pwd=<fortimgr-password>
     ```
@@ -86,7 +86,7 @@ The basic workflow is:
 
     a. Download Fortinet integration manifest
 
-    ```
+    ```bash
     curl -O https://docs.tigera.io/manifests/fortimanager.yaml
     ```
 
@@ -94,21 +94,22 @@ The basic workflow is:
 
     >If you use FortiManager integration for East-West policy management together with Fortinet integration for North-South policy management, some of the resource names may overlap and could result in misconfiguraiton. Make sure the resource names for East-West integraiton differ from those for North-South configuration.
 
-    ```
+    ```bash
     # if East-South integration resources have the same names as North-South integration, rename them to avoid any configuration collisions
-    sed -e '/\s*namespace:\stigera-firewall-controller/b; s/tigera-firewall-controller/tigera-firewall-controller-ew/g' fortimanager.yaml
+    sed -i '/\s*namespace:\stigera-firewall-controller/b; s/tigera-firewall-controller/tigera-firewall-controller-ew/g' fortimanager.yaml
     ```
 
     c. Apply the manifest
 
-    ```
+    ```bash
     kubectl apply -f fortimanager.yaml
     ```
 
 5. Verify that the deployment of the controller is successful:
 
-    ```
+    ```bash
     $ kubectl get pod  -n tigera-firewall-controller
+
     NAME                                                                 READY   STATUS    RESTARTS   AGE
     tigera-firewall-controller-58847b76b-m6b5m                           1/1     Running   0          14m
     tigera-firewall-controller-ew-fortimanager-policies-ccc4f6f879j8f7   1/1     Running   0          1m
