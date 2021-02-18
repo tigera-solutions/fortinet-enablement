@@ -6,14 +6,14 @@
 
 Before going through this module, we need to make sure we have planned our kubernetes network IP ranges. We need to have an IP range for the pods and an IP range for services. For the sake of this lab we will be using the following:
 
-```
+```bash
 POD CIDR == 172.16.0.0/16
 SERVICE CIDR == 192.168.0.0/16
 ```
 
->You will find some configuration files and `demo` directory in the `master` node under `/home/calico-fortinet/` directory. All the configurations needed will in this directory and the demo app will be unter the `demo` directory. 
+>You will find some configuration files and `demo` directory in the `master` node under `/home/calico-fortinet/` directory. All the configurations needed will in this directory and the demo app will be under the `demo` directory. 
 
-```
+```text
 |-- configs
 |   |-- 0-install-kubeadm.sh
 |   |-- 1-kubeadm-init-config.yaml
@@ -30,11 +30,13 @@ SERVICE CIDR == 192.168.0.0/16
 
 1. SSH into the `master` node, then update the `1-kubeadm-init-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configruation file based on this config.
 
-    ```
+    ```bash
     $ hostname -f
+
     ip-10-99-1-X.us-west-2.compute.internal
 
     $ cat 1-kubeadm-init-config.yaml
+
     apiVersion: kubeadm.k8s.io/v1beta2
     bootstrapTokens:
     - groups:
@@ -89,8 +91,9 @@ SERVICE CIDR == 192.168.0.0/16
 
 2. Now you can launch kubernetes using kubeadm (On the `master` node)
 
-    ```
+    ```bash
     $ sudo kubeadm init --config 1-kubeadm-init-config.yaml
+
     W0923 20:55:22.992192    8924 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
     [init] Using Kubernetes version: v1.19.0
     [preflight] Running pre-flight checks
@@ -164,18 +167,21 @@ SERVICE CIDR == 192.168.0.0/16
         --discovery-token-ca-cert-hash sha256:c211c95124bde99ce8f78ae4b5fc0058d0d49c847b73e34764f1ae05f205b1d4
     ```
 
+    Note the `sha256` hash value as you will need it when joining the worker nodes to the cluster.
+
 3. Make sure you follow the below steps to setup `kubectl` and take note/save of the `kubeadm join ` coomand that was provided.
 
-    ```
-    $ mkdir -p $HOME/.kube
-    $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    ```bash
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
     ```
 
 4. Verify that you can issue `kubectl` commands. The `master` node will be in the `NotReady` state until Calico us deployed.
 
-    ```
+    ```bash
     $ kubectl get nodes
+
     NAME                                        STATUS   ROLES    AGE   VERSION
     ip-10-99-1-150.us-west-2.compute.internal   NotReady    master   20h   v1.19.3
     ```

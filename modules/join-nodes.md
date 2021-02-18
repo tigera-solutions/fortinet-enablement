@@ -5,10 +5,10 @@
 1. We need to join the other nodes. For every worker node, ssh into the node and update the `1-kubeadm-join-config.yaml` file that we copied to `/home/ubuntu` with the node details. You need to update the following for every worker node.
 
     - `apiServerEndpoint`  to reflect MASTER PRIVATE IP  
-    - `caCertHashes` to reflect the SHA hash of the CA. This was provided in the output of the `kubeadm init` step that you've done previously.  
+    - `caCertHashes` to reflect the SHA hash of the CA. This was provided in the output of the `kubeadm init` step that you've done previously.
     - `name` to reflect the full hostname of the node (e.g `ip-10-99-2-177.us-west-2.compute.internal`)
 
-    ```
+    ```yaml
       ---
       apiVersion: kubeadm.k8s.io/v1beta2
       kind: JoinConfiguration
@@ -25,8 +25,9 @@
 
 2. Using the updated join configuration file, you can now join each of the nodes as follows:
 
-    ```
+    ```bash
     $ sudo kubeadm join --config=1-kubeadm-join-config.yaml
+
     [preflight] Running pre-flight checks
           [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
     [preflight] Reading configuration from the cluster...
@@ -45,8 +46,9 @@
 
 3. Verify that you have successfully joined the nodes to the cluster. On your `master` node:
 
-    ```
+    ```bash
     $ kubectl get nodes
+    
     NAME           STATUS     ROLES    AGE     VERSION
     ip-10-99-2-11.us-west-2.compute.internal   NotReady   <none>   2m13s   v1.19.2
     ip-10-99-2-22.us-west-2.compute.internal  NotReady   <none>   2m12s   v1.19.2
