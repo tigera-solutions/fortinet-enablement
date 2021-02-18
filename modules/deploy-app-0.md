@@ -186,7 +186,9 @@
 
 5. You can now explore creating policies within FortiGate that use this address group.
 
-    Create a policy in FortiGate, e.g. `app-0.http-access`, which controls HTTP access for `app-0` address group. Test HTTP access from `app-0` pods while switching the policy action between `ACCEPT` and `DENY`.
+    - Create a policy in FortiGate, e.g. `app-0.http-access`, which controls HTTP access for `app-0` address group.
+    - Move the policy to be ordered before the `allow-internet` policy.
+    - Test HTTP access from `app-0` pods while switching the policy action between `ACCEPT` and `DENY`.
 
     ![img](../img/fortigate-http-access-policy.png)
 
