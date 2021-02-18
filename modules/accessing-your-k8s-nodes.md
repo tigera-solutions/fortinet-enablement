@@ -43,6 +43,8 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
 
     b. Copy the script to `worker-1` and `worker-2`.
 
+    >If you don't have SSH Forwarding configured, you'll need to provide SSH private key via `-i /path/to/key` option.
+
     ```bash
     scp 0-install-kubeadm.sh ubuntu@<WOERKER-1_IP>:/home/ubuntu
     scp 0-install-kubeadm.sh ubuntu@<WOERKER-2_IP>:/home/ubuntu
@@ -67,6 +69,8 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     ```
 
 5. There is also another kubeadm configuration named `1-kubeadm-join-config.yaml` under the same directory. Copy it to the two worker nodes:
+
+    >If you don't have SSH Forwarding configured, you'll need to provide SSH private key via `-i /path/to/key` option.
 
     ```bash
     scp 1-kubeadm-join-config.yaml ubuntu@<WOERKER-1_IP>:/home/ubuntu

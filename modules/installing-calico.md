@@ -45,11 +45,11 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
         --from-file=.dockerconfigjson=dockerjsonconfig.json
     ```
 
-4. Install the Tigera Custom Resource, then ensure the API server is `available` before moving to the next step. 
+4. Install the Tigera Custom Resources, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
 
     ```bash
     $ kubectl create -f https://docs.tigera.io/manifests/custom-resources.yaml
-    $ kubectl get tigerastatus
+    $ watch kubectl get tigerastatus
 
     NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
     apiserver             True        False         False      20h
