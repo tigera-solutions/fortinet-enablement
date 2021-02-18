@@ -140,7 +140,11 @@
 
 4. Repeat the process for `app-2-address-group` and `ns1-centos-address-group`.
 
-5. Now you will create a policy under the **Policy Packages**  tab in **calico-ew** package to secure the two applications. Create a policy to allow the `centos` pod with label `tigera.io/address-group: ns1-centos-address-group` to connect over HTTP to `nginx` pods with label `tigera.io/address-group: app-1-address-group`. Click on **Create New** and fill the values as shown in the below image:
+5. Now you will create a policy under the **Policy Packages**  tab in **calico-ew** package to secure the two applications. Create a policy to allow the `centos` pod with label `tigera.io/address-group: ns1-centos-address-group` to connect over HTTP to `nginx` pods with label `tigera.io/address-group: app-1-address-group`.
+
+    >Make sure that the policy name does not contain a period (`.`) in it. Since the East-West policies get translated into Calico policies, the policy name must not have any period in its name.
+
+    Click on **Create New** and fill the values as shown in the below image:
 
     ![fortimanager-http-access-policy.png](../img/fortimanager-http-access-policy.png)
 
