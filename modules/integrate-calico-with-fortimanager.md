@@ -34,7 +34,7 @@ The basic workflow is:
 
     ![fortinet_package_calico_ew.png](../img/fortinet_package_calico_ew.png)
 
-    d. Under **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access.
+    d. Under **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access. Specify CIDR or IP addresses of Kubernetes hosts in the `Trusted Hosts` field. In ou case, it is `10.99.0.0/16`.
 
     ![fortimanager_create_user_ew.png](../img/fortimanager_create_user_ew.png)
 
