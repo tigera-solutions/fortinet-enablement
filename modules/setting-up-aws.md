@@ -6,21 +6,24 @@ Goal: this module sets up your AWS environment using Terraform.
 
 1. Make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS Key Pair name. Make sure you rename the terraform file `terrafrom.tfvars`.
 
-    ```
-    🐯 → cat terraform.tfvars 
+    ```bash
+    🐯 → cat terraform.tfvars
+
     key_name        = "mykey"
     ```
 
 2. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly.
 
-    ```
+    ```yaml
         # Ubuntu 20.04 LTS (x64)
         variable "aws_amis" {
-        default = {
-            us-west-2 = "ami-01a5f3ee4a9903e77"
-        }
+            default = {
+                us-west-2 = "ami-01a5f3ee4a9903e77"
+            }
         }
     ```
+
+    >If you use a different region than `us-west-2`, adjust `az1` and `az2` variables that are defined in the `variables.tf` file. You can override default values by setting the appropriate values in the `terraform.tfvars` file.
 
     To find appropriate FortiGate and FortiManager AMI for your region, you can use either [AWS Marketplace website](https://aws.amazon.com/marketplace/seller-profile?id=243a3a4c-e35a-49b0-9061-3f354bb2254e) or `aws-cli`. Use `ONDEMAND` AMI if you don't have Fortinet license and intend to use Pay-As-You-Go licensing.
 
@@ -37,7 +40,7 @@ Goal: this module sets up your AWS environment using Terraform.
 
     > Note: If you never accepted Terms of Use for using Fortigate & FortiManager Pay-As-You-Go, you will be required to do so and the operation will fail and point you to the URL to go through that process.
 
-    ```
+    ```text
     🐯 → terraform init
 
     Initializing the backend...
@@ -66,13 +69,13 @@ Goal: this module sets up your AWS environment using Terraform.
     commands will detect it and remind you to do so if necessary.
     ```
 
-    ```
-        $ terraform plan
-        ....
+    ```bash
+        terraform plan
     ```
 
-    ```
-        $  terraform apply
+    ```text
+        terraform apply
+
     data.template_file.FortiGate: Refreshing state... [id=d323b53709bb0d747ab8c01fba8e5b121202f4c3e14ecbd416c068480edeccb2]
     aws_key_pair.auth: Refreshing state... [id=dockey]
     aws_vpc.fortinet-calico-vpc: Refreshing state... [id=vpc-0c5f6158be95edea0]

@@ -8,10 +8,11 @@
 
     ```bash
     🐯 → terraform version
-    Terraform v0.14.7
+    
+    Terraform v0.14.5
 
     Your version of Terraform is out of date! The latest version
-    is 0.13.4. You can update by downloading from https://www.terraform.io/downloads.html
+    is 0.14.7. You can update by downloading from https://www.terraform.io/downloads.html
     ```
 
 2. Assuming your SSH public key is named `mykey.pub` and your private SSH key is named `mykey.pem` and the Key Pair name in AWS is named `mykey`. You need to first enable SSH forwarding locally as follows:
