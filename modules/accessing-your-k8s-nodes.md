@@ -50,7 +50,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     scp 0-install-kubeadm.sh ubuntu@<WOERKER-2_IP>:/home/ubuntu
     ```
 
-    c. Run the script.
+    c. Run the script on all the nodes you copied it to.
 
     ```bash
     source ./0-install-kubeadm.sh
