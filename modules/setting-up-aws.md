@@ -4,13 +4,15 @@ Goal: this module sets up your AWS environment using Terraform.
 
 ## Steps
 
-1. Make a copy of `terrafrom.tfvars.template` and name it `terraform.tfvars` to specify the AWS Key Pair name. Make sure you rename the terraform file `terrafrom.tfvars`.
+1. Make a copy of `terraform.tfvars.template` and name it `terraform.tfvars` to specify the AWS Key Pair name. Make sure you rename the file to `terraform.tfvars`. Set the `key_name` to the name of AWS Key Pair that you will use with provisioned EC2 instances, e.g. `mykey` or `my-wokshop-key`, etc.
 
     ```bash
     🐯 → cat terraform.tfvars
 
     key_name        = "mykey"
     ```
+
+    >If you don't have AWS Key Pair created, you can either [create a new key pair or import existing key](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#prepare-key-pair) into AWS.
 
 2. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly.
 
@@ -25,7 +27,7 @@ Goal: this module sets up your AWS environment using Terraform.
 
     >If you use a different region than `us-west-2`, adjust `az1` and `az2` variables that are defined in the `variables.tf` file. You can override default values by setting the appropriate values in the `terraform.tfvars` file.
 
-    To find appropriate FortiGate and FortiManager AMI for your region, you can use either [AWS Marketplace website](https://aws.amazon.com/marketplace/seller-profile?id=243a3a4c-e35a-49b0-9061-3f354bb2254e) or `aws-cli`. Use `ONDEMAND` AMI if you don't have Fortinet license and intend to use Pay-As-You-Go licensing.
+    To find appropriate FortiGate and FortiManager AMI for your region, you can use either [AWS Marketplace website](https://aws.amazon.com/marketplace/seller-profile?id=243a3a4c-e35a-49b0-9061-3f354bb2254e) or `aws-cli`. Use `ONDEMAND` AMI if you don't have Fortinet license and intend to use Pay-As-You-Go licensing. Make sure to choose image version `6.2.x` which is a requirement at this time.
 
     ```bash
     # list FortiGate images for chosen region
@@ -105,9 +107,11 @@ Goal: this module sets up your AWS environment using Terraform.
 
     Outputs:
 
+    FGTPrivateIP = 10.99.1.X
     FGTPublicIP = X.X.X.X
     FortiGatePassword = i-034917bd90XXXX
     FortiManagerPassword = i-086dec29XXXX
+    FortiManagerPublicIP = X.X.X.X
     FortiManagerPublicIP = X.X.X.X
     FortiManagerUsername = admin
     FortigateUsername = admin
@@ -115,6 +119,8 @@ Goal: this module sets up your AWS environment using Terraform.
     worker-1-ip = 10.99.2.X
     worker-2-ip = 10.99.2.X
     ```
+
+    Note the output information as you will use it in following modules.
 
 4. You should now be able to SSH into the `master` VM using its public IP.
 

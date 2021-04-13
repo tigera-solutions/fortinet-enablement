@@ -29,7 +29,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     storageclass.storage.k8s.io/tigera-elasticsearch created
     ```
 
-2. Now we can create the Tigera and Prometheus Operaters that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
+2. Now we can create the Tigera and Prometheus operators that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
 
     ```bash
     kubectl create -f https://docs.tigera.io/manifests/tigera-operator.yaml
@@ -142,7 +142,9 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
     Keep track of these two tokens as they will be used later on!
 
-10. Finally, you can logint to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
+10. Finally, you can login to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
+
+    >It can take a moment for the load balancer URL to become operational as AWS needs to pass a few checks on its side to enable traffic to the load balancer.
 
     ![img](../img/tigera-ui.png)
 

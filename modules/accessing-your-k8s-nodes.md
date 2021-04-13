@@ -24,7 +24,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     ubuntu@ip-10-99-2-212:~$ 
     ```
 
-3. On the `master` node, there is a script named `0-install-kubeadm.sh` under the`/home/ubuntu/calico-fortinet` directory. This script will install the following packages:
+3. On the `master` node, there is a script named `0-install-kubeadm.sh` under the`/home/ubuntu/calico-fortinet` directory. This script installs the following packages:
 
     - Docker
     - kubeadm
@@ -32,7 +32,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     - kubeadm
     - calicoctl
 
-4. Copy the script file to the  `worker-1`, and `worker-2` nodes and run it on **all three nodes** including the `master`
+4. Copy the script file to `worker-1` and `worker-2` nodes, and run it on **all three nodes** including the `master`.
 
     a. On `master` node go to `calico-fortinet` directory and set `exec` permission for the script.
 
@@ -41,7 +41,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     chmod u+x 0-install-kubeadm.sh
     ```
 
-    b. Copy the script to `worker-1` and `worker-2`.
+    b. Copy the script to `worker-1` and `worker-2` and set `exec` permisson for the script on each node.
 
     >If you don't have SSH Forwarding configured, you'll need to provide SSH private key via `-i /path/to/key` option.
 

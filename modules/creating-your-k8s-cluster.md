@@ -11,7 +11,7 @@ POD CIDR == 172.16.0.0/16
 SERVICE CIDR == 192.168.0.0/16
 ```
 
->You will find some configuration files and `demo` directory in the `master` node under `/home/calico-fortinet/` directory. All the configurations needed will in this directory and the demo app will be under the `demo` directory. 
+>You will find some configuration files and `demo` directory on the `master` node under `/home/calico-fortinet/` directory. All the configurations needed are in this directory and the demo app is under the `demo` directory. 
 
 ```text
 |-- configs

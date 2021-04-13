@@ -20,6 +20,8 @@ The basic workflow is:
 
 1. **Configure FortiManager to communicate with firewall controller**
 
+    From your browser, log into FortiManager UI Console using the public IP and port `443` provided to you in the output of the `terraform apply` step.
+
     >If you already have a suitable API user profile, you can use it to create `tigera_ew_fortimanager_admin` and skip steps `a` and `b`.
 
     a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
@@ -34,7 +36,7 @@ The basic workflow is:
 
     ![fortinet_package_calico_ew.png](../img/fortinet_package_calico_ew.png)
 
-    d. Under **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access. Specify CIDR or IP addresses of Kubernetes hosts in the `Trusted Hosts` field. In ou case, it is `10.99.0.0/16`.
+    d. Under **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access. Specify CIDR or IP addresses of Kubernetes hosts in the `Trusted Hosts` field. In our case, it is `10.99.0.0/16`.
 
     ![fortimanager_create_user_ew.png](../img/fortimanager_create_user_ew.png)
 

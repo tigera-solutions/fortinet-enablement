@@ -10,7 +10,6 @@ metadata:
   name: tigera-firewall-controller-configs
   namespace: tigera-firewall-controller
 data:
-  tigera.firewall.fortimgr: |
   # FortiGate device information
   tigera.firewall.fortigate: |
     - name: fortigate
@@ -19,7 +18,7 @@ data:
         secretKeyRef:
           name: fortigate
           key: fortigate-key
-  # Uncommend and configure this part when using FortiManager integration for North-South traffic management
+  # Uncomment and configure this part when using FortiManager integration for North-South traffic management
   tigera.firewall.fortimgr: |-
   #   - name: fortimgr
   #     ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP

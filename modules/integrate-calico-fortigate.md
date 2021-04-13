@@ -46,7 +46,6 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
       name: tigera-firewall-controller-configs
       namespace: tigera-firewall-controller
     data:
-      tigera.firewall.fortimgr: |
       # FortiGate device information
       tigera.firewall.fortigate: |
         - name: fortigate
@@ -86,7 +85,7 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
     configmap/tigera-firewall-controller created
     ```
 
-3. **Create FortiGate API User and Key as Kubernetes Secrets.**
+3. **Create FortiGate API User and Key as Kubernetes Secrets**
 
     Store each FortiGate API key as Secret in `tigera-firewall-controller` namespace.
     for example, In the above config map for FortiGate device `fortigate`, store its ApiKey as a secret name as `fortigate`, with key as `fortigate-key`
