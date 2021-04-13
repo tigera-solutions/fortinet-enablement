@@ -73,18 +73,21 @@ Below is an architecture diagram of the various components that will be deployed
 
 1. You need to make sure you delete the loadbalancer service first.
 
-```
-$ kubectl delete -f 3-loadbalancer.yaml
-```
+    ```bash
+    kubectl delete -f 3-loadbalancer.yaml
+    ```
 
 2. Now you can issue a `terraform destroy` to fully remove all the environment resources.
 
-```
-🐯 → terraform destroy 
-...
-Do you really want to destroy all resources?
-  Terraform will destroy all your managed infrastructure, as shown above.
-  There is no undo. Only 'yes' will be accepted to confirm.
+    ```text
+    terraform destroy
 
-  Enter a value: yes
-```
+    ...
+    Do you really want to destroy all resources?
+      Terraform will destroy all your managed infrastructure, as shown above.
+      There is no undo. Only 'yes' will be accepted to confirm.
+
+      Enter a value: yes
+    ```
+
+    >AWS creates and attaches a security group to the load balancer resource when the `LoadBalancer` service is created on the Kubernetes side. This security group may not be cleaned up when teh `LoadBalancer` service is removed from the Kubernetes side which may cause the `terraform destroy` command to not cleanup the `VPC`. If this happens, you should manually cleanup the security group and the VPC. In such case the `VPC` ID will be printed in `terraform destroy` output.
