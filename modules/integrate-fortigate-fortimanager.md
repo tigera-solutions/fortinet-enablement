@@ -1,6 +1,6 @@
 # Module 10: Integrating FortiGate with FortiManager
 
->**THIS MODULE IS NOT READY YET.** PLEASE SKIP TO [MODULE 12](./modules/integrate-calico-with-fortimanager.md).
+>**THIS MODULE IS NOT READY YET.** PLEASE SKIP TO [MODULE 12](../modules/integrate-calico-with-fortimanager.md).
 
 **Goal:** Integrate FortiGate with FortiManager.
 
