@@ -36,7 +36,7 @@ Goal: this module sets up your AWS environment using Terraform.
     aws ec2 describe-images --query 'Images[*].[CreationDate,Name,ImageId]' --filters "Name=name,Values=*FortiManager*" --region us-west-2 --output table | sort -r
     ```
 
-    >If you want to create multiple environments or change the default prefix for the resources to be provisioned, adjust `resource_prefix` variable in the `variables.tf` file.
+    >If you want to create multiple environments or change the default prefix for the resources to be provisioned, adjust `resource_prefix` variable in the `variables.tf` file or set it directly in `terraform` command, e.g. `terraform apply -var="resource_prefix=my-califn-"`.
 
 3. Initialize, Plan, and Apply Terraform.  After some time, you should see all the necessary outputs to log into your instances.
 
