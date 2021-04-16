@@ -2,7 +2,7 @@
 set -e
 
 KUBERNETES_VERSION=1.19.7-00
-CALICO_VERSION=3.17.1
+CALICO_VERSION=3.18.1
 
 # Installing all required packages to run Kubeadm
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
