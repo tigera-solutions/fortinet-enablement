@@ -25,6 +25,8 @@ To configure a Cloud9 instance, open AWS Console and navigate to Services > Clou
 
     ```bash
     eval `ssh-agent -s`
+    # make sure key has appropriate permissions set
+    chmod 400 ~/.ssh/mykey.pem
     ssh-add ~/.ssh/mykey.pem 
     ```
 
