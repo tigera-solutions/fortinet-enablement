@@ -25,7 +25,7 @@ To configure a Cloud9 instance, open AWS Console and navigate to Services > Clou
 
     ```bash
     eval `ssh-agent -s`
-    # make sure key has appropriate permissions set
+    # make sure the key has appropriate permission set
     chmod 400 ~/.ssh/mykey.pem
     ssh-add ~/.ssh/mykey.pem 
     ```
@@ -50,6 +50,12 @@ To configure a Cloud9 instance, open AWS Console and navigate to Services > Clou
     HashKnownHosts no
     ForwardAgent yes
     EOF
+    ```
+
+    Set `600` permission for the `~/.ssh/config`
+
+    ```bash
+    chmod 600 ~/.ssh/config
     ```
 
 3. Export your [AWS Access Key/ID](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). If you already have them under your `~/.aws/credentials` then you don't need to do this step.
