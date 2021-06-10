@@ -132,7 +132,7 @@
 
     >If you see any pods failing with status `ImagePullBackOff` or `ErrImagePull`, make sure that the previously configured FortiGate policy is not denying the traffic. You can either enable the policy to allow traffic, or order the `allow-internet` policy to be the first in the list in FortiGate.
 
-3. In the FortiManager portal, navigate to **Policy & Objects > Object Configurations > Create New > Address Group**. We need to create empty Address Groups: `app-1-address-group`, `app-2-address-group` and `ns1-centos-address-group`. When you select Members, ensure you search for `none` and select that option.
+3. In the FortiManager portal, navigate to **Policy & Objects > Object Configurations > Firewall Objects > Create New > Address Group**. We need to create empty Address Groups: `app-1-address-group`, `app-2-address-group` and `ns1-centos-address-group`. When you select Members, ensure you search for `none` and select that option.
 
     >Notice that Address Groups names you create in FortiManager should match the values provided for `tigera.io/address-group` label of the applications for which you want to create policies.
 
