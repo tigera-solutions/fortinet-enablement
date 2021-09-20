@@ -28,13 +28,25 @@ SERVICE CIDR == 192.168.0.0/16
 |   `-- tiers-demo.yaml
 ```
 
-1. SSH into the `master` node, then update the `1-kubeadm-init-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configruation file based on this config.
+1. SSH into the `master` node, then update the `1-kubeadm-init-config.yaml` to add the FQDN of the master node(e.g `ip-10-99-2-246.us-west-2.compute.internal`). You can get it using `$ hostname -f`. Now you can create a new cluster configuration file based on this config.
+
+    a. Check node's hostname.
 
     ```bash
     $ hostname -f
 
     ip-10-99-1-X.us-west-2.compute.internal
+    ```
 
+    b. Configure node's hostname in `1-kubeadm-init-config.yaml` configuration file.
+
+    ```bash
+    sed -i "s/name:\ master/name:\ $(hostname -f)/1" 1-kubeadm-init-config.yaml
+    ```
+
+    Example configuration:
+
+    ```bash
     $ cat 1-kubeadm-init-config.yaml
 
     apiVersion: kubeadm.k8s.io/v1beta2
@@ -89,7 +101,7 @@ SERVICE CIDR == 192.168.0.0/16
       configure-cloud-routes: "false"
     ```
 
-2. Now you can launch kubernetes using kubeadm (On the `master` node)
+2. Now you can launch Kubernetes using `kubeadm` (on the `master` node)
 
     ```bash
     $ sudo kubeadm init --config 1-kubeadm-init-config.yaml
@@ -169,7 +181,7 @@ SERVICE CIDR == 192.168.0.0/16
 
     Note the `sha256` hash value as you will need it when joining the worker nodes to the cluster.
 
-3. Make sure you follow the below steps to setup `kubectl` and take note/save of the `kubeadm join ` coomand that was provided.
+3. Make sure you follow the below steps to setup `kubectl` and take note/save of the `kubeadm join` command that was provided.
 
     ```bash
     mkdir -p $HOME/.kube
