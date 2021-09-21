@@ -181,7 +181,7 @@ SERVICE CIDR == 192.168.0.0/16
 
     Note the `sha256` hash value as you will need it when joining the worker nodes to the cluster.
 
-3. Make sure you follow the below steps to setup `kubectl` and take note/save of the `kubeadm join` command that was provided.
+3. Make sure you follow the below steps to setup `kubectl` and note the `kubeadm join` command that was provided.
 
     ```bash
     mkdir -p $HOME/.kube
@@ -196,6 +196,21 @@ SERVICE CIDR == 192.168.0.0/16
 
     NAME                                        STATUS   ROLES    AGE   VERSION
     ip-10-99-1-150.us-west-2.compute.internal   NotReady    master   20h   v1.19.3
+    ```
+
+5. Collect settings to join worker nodes.
+
+    Get join token and certificate hash value to use when joining worker nodes to the cluster.
+
+    >These commands provided as an example to get join token and certificate hash. Alternatively, you can copy this information from the output in step 2.
+
+    ```bash
+    # set vars
+    JOIN_TOKEN=$(kubeadm token list -o jsonpath='{.token}')
+    CERT_HASH=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+    CONTROL_PLANE_IP=$(hostname -I | awk '{print $1}')
+    # print vars
+    echo -e "JOIN_TOKEN=$JOIN_TOKEN \nCERT_SHA=sha256:$CERT_HASH \nCONTROL_PLANE_IP=$CONTROL_PLANE_IP"
     ```
 
 [Next -> Module 6](../modules/join-nodes.md)

@@ -6,21 +6,33 @@
 
     - `apiServerEndpoint`  to reflect MASTER PRIVATE IP  
     - `caCertHashes` to reflect the SHA hash of the CA. This was provided in the output of the `kubeadm init` step that you've done previously.
-    - `name` to reflect the full hostname of the node (e.g `ip-10-99-2-177.us-west-2.compute.internal`)
+    - `name` to reflect the full hostname of the node (e.g `ip-10-99-2-X.us-west-2.compute.internal`)
 
     ```yaml
       ---
       apiVersion: kubeadm.k8s.io/v1beta2
       kind: JoinConfiguration
       discovery:
-      bootstrapToken:
+        bootstrapToken:
           token: abcdef.0123456789abcdef                   
           apiServerEndpoint: "MASTER_PRIVATE_IP:6443"      # UPDATE to reflect MASTER PRIVATE IP
           caCertHashes: ["sha256:2a78c74c95db246c9d711276d1d0c9956cd36e765a1181519ab0f03a037488b6"]  # UPDATE based on kubeadm init output
       nodeRegistration:
-      name: ip-10-99-2-X.us-west-2.compute.internal    # UPDATE with Full Hostname of Local Worker Node
-      kubeletExtraArgs:
+        name: ip-10-99-2-X.us-west-2.compute.internal    # UPDATE with Full Hostname of Local Worker Node
+        kubeletExtraArgs:
           cloud-provider: aws
+    ```
+
+    Example to use helper variables retrieved in a previous module.
+
+    >Use the variables `CONTROL_PLANE_IP` and `CERT_SHA` retrieved in previous module.
+
+    ```bash
+    # set CONTROL_PLANE_IP and CERT_SHA variables
+    #CONTROL_PLANE_IP=""
+    #CERT_SHA=""
+    HOST_NAME=$(hostname -f)
+    sed -i "s/MASTER_PRIVATE_IP/$CONTROL_PLANE_IP/1; s/sha256:.*\"/$CERT_SHA\"/1; s/name:\ ip.*$/name:\ $HOST_NAME/1" 1-kubeadm-join-config.yaml
     ```
 
 2. Using the updated join configuration file, you can now join each of the nodes as follows:
