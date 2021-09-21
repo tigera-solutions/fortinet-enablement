@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-KUBERNETES_VERSION=1.19.7-00
-CALICO_VERSION=3.18.1
+KUBERNETES_VERSION=1.21.4-00
+CALICO_VERSION=3.9.0
 
 # Installing all required packages to run Kubeadm
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
@@ -21,6 +21,6 @@ sudo usermod -aG docker ubuntu
 newgrp docker
 
 # Installing calicoctl
-sudo curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v$CALICO_VERSION/calicoctl && sudo chmod +x calicoctl && sudo mv calicoctl /usr/bin
+sudo curl -O -L  https://downloads.tigera.io/ee/binaries/v$CALICO_VERSION/calicoctl && sudo chmod +x calicoctl && sudo mv calicoctl /usr/bin
 export CALICO_DATASTORE_TYPE=kubernetes
 export CALICO_KUBECONFIG=~/.kube/config 

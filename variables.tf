@@ -31,7 +31,7 @@ variable "privatecidraz1" {
 # Ubuntu 20.04 LTS (x64)
 variable "aws_amis" {
   default = {
-    us-west-2 = "ami-0928f4202481dfdf6"
+    us-west-2 = "ami-0ceee60bcb94f60cd"
   }
 }
 
