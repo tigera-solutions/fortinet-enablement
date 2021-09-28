@@ -77,12 +77,8 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
 
     Then you can apply it:
 
-    ```
-    $ kubectl create -f 4-fortigate-firewall-config.yaml
-
-    namespace/tigera-firewall-controller created
-    configmap/tigera-firewall-controller-configs created
-    configmap/tigera-firewall-controller created
+    ```bash
+    kubectl create -f 4-fortigate-firewall-config.yaml
     ```
 
 3. **Create FortiGate API User and Key as Kubernetes Secrets**
@@ -90,35 +86,31 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
     Store each FortiGate API key as Secret in `tigera-firewall-controller` namespace.
     for example, In the above config map for FortiGate device `fortigate`, store its ApiKey as a secret name as `fortigate`, with key as `fortigate-key`
 
-    ```
-    $ kubectl create secret generic fortigate \
+    ```bash
+    kubectl create secret generic fortigate \
     -n tigera-firewall-controller \
     --from-literal=fortigate-key=<fortigate-api-secret>
-
-    secret/fortigate created
     ```
 
 4. Deploy firewall controller in the Kubernetes cluster
 
-    a. Install your Tigera pull secret in the new namespace we created:
+    a. Copy Tigera pull secret into `tigera-firewall-namespace` namespace:
 
-    ```
-    $ kubectl create secret generic tigera-pull-secret \
-    --from-file=.dockerconfigjson=/home/ubuntu/calico-fortinet/dockerjsonconfig.json \
-    --type=kubernetes.io/dockerconfigjson -n tigera-firewall-controller
-
-    secret/tigera-pull-secret created
+    ```bash
+    kubectl get secret tigera-pull-secret --namespace=calico-system -o yaml | \
+    grep -v '^[[:space:]]*namespace:[[:space:]]*calico-system' | \
+    kubectl apply --namespace=tigera-firewall-controller -f -
     ```
 
     b. Download Fortinet integration manifest
 
-    ```
+    ```bash
     curl -O https://docs.tigera.io/manifests/fortinet.yaml
     ```
 
     c. Review and apply the manifest
 
-    ```
+    ```bash
     kubectl apply -f fortinet.yaml
     ```
 
@@ -126,8 +118,9 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
 
     ```
     $ kubectl get pod  -n tigera-firewall-controller
+
     NAME                                          READY   STATUS    RESTARTS   AGE
-    tigera-firewall-controller-586bb9756d-b2qfw   1/1     Running   0          19m
+    tigera-firewall-controller-586bb9756d-b2qfw   1/1     Running   0          1m
     ```
 
 6. In the case the pod doesn't show as "Running". You can issue `kubectl describe pod <POD_NAME> -n tigera-firewall-controller` and `kubectl logs <POD_NAME> -n tigera-firewall-controller` to collect additional info on what issue you're hitting.
