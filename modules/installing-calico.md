@@ -22,11 +22,12 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     reclaimPolicy: Retain
     allowVolumeExpansion: true
     volumeBindingMode: WaitForFirstConsumer
+    ```
 
+    Use `2-ebs-storageclass.yaml` file to apply `tigera-elasticsearch` StorageClass resource.
 
-    $ kubectl create -f 2-ebs-storageclass.yaml
-
-    storageclass.storage.k8s.io/tigera-elasticsearch created
+    ```bash
+    kubectl create -f 2-ebs-storageclass.yaml
     ```
 
 2. Now we can create the Tigera and Prometheus operators that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
@@ -48,7 +49,12 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 4. Install the Tigera Custom Resources, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
 
     ```bash
-    $ kubectl create -f https://docs.tigera.io/manifests/custom-resources.yaml
+    kubectl create -f https://docs.tigera.io/manifests/custom-resources.yaml
+    ```
+
+    Watch `apiserver` component to become available before proceeding.
+
+    ```bash
     $ watch kubectl get tigerastatus
 
     NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
@@ -65,9 +71,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
     ```bash
     # run this command from within /calico-fortinet path
-    $ kubectl create -f license.yaml
-
-    licensekey.projectcalico.org/default created
+    kubectl create -f license.yaml
     ```
 
 6. Finally, watch `tigerastatus` resource to ensure that the `apiserver`,`calico`, `log-storage`, and `manager` components of Calico Enterprise report their availability status as `True`. This would mean that the Calico CNI and the enterprise components work as expected. This step may take some time...
@@ -87,7 +91,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
 7. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP.
 
-    ```bash
+    ```text
     $ cat 3-loadbalancer.yaml
 
     kind: Service
@@ -104,15 +108,17 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
       - port: 443
         targetPort: 9443
         protocol: TCP
+    ```
 
-    $ kubectl create -f 3-loadbalancer.yaml
+    Deploy the LoadBalancer service to expose Enterprise Manager UI.
 
-    service/tigera-manager-external created
+    ```bash
+    kubectl create -f 3-loadbalancer.yaml
     ```
 
     After creating the service, it may take a few minutes for the load balancer to be created. Once complete, the load balancer IP address will appear as an `ExternalIP` in `kubectl get services -n tigera-manager tigera-manager-external`.
 
-    ```bash
+    ```text
     $ kubectl get services -n tigera-manager tigera-manager-external
 
     NAME                      TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)         AGE
@@ -150,7 +156,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
 11. If the URL is not loading after some time. Check if the `tigera-manager` pod is running on the `master` node.  If it is, go ahead and delete the pod so it can be rescheduled on another node. The reason this issue is seen is that the ELB doesn't forward to pods deployed on the `master` node since it's on the public subnet.
 
-    ```bash
+    ```text
     $ kubectl get pod -n tigera-manager -o wide
 
     NAME                             READY   STATUS    RESTARTS   AGE   IP              NODE                                        NOMINATED NODE   READINESS GATES
