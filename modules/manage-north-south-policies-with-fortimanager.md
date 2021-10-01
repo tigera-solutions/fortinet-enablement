@@ -10,7 +10,7 @@
 
     a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
 
-    b.  Go to FortiManager from your browser, from **System Settings**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`.
+    b.  Go to FortiManager from your browser, from **System Settings** -> **Profile**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`.
 
     ![fortimanager_user_profile1.png](../img/fortimanager_user_profile1.png)
 
