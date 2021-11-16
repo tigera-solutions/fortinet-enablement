@@ -167,7 +167,7 @@
     kubectl -n ns1 exec -t centos -- curl $POD_IP
     ```
 
-    However, the connection between the `nginx` pods should not be blocked as our policies do not allow it.
+    However, the connection between the `nginx` pods should be blocked as our policies do not allow it.
 
     ```bash
     kubectl -n ns1 exec -t $(kubectl -n ns1 get po -l app=app-2 -ojsonpath='{.items[0].metadata.name}') -- curl $POD_IP
