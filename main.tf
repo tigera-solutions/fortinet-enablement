@@ -24,7 +24,7 @@ resource "aws_vpc" "fortinet-calico-vpc" {
   }
 }
 
-# Create a public subnet to launch our instances into
+# Create a private subnet to launch our instances into
 resource "aws_subnet" "fortinet-calico-pvt-subnet" {
   vpc_id                  = aws_vpc.fortinet-calico-vpc.id
   cidr_block              = var.privatecidraz1
@@ -37,7 +37,7 @@ resource "aws_subnet" "fortinet-calico-pvt-subnet" {
   }
 }
 
-# Create a private subnet to launch our instances into
+# Create a public subnet to launch our instances into
 resource "aws_subnet" "fortinet-calico-pub-subnet" {
   vpc_id                  = aws_vpc.fortinet-calico-vpc.id
   cidr_block              = var.publiccidraz1
@@ -181,30 +181,6 @@ resource "aws_iam_instance_profile" "instance_profile" {
 }
 
 
-resource "aws_instance" "master" {
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    host = self.public_ip
-  }
-  instance_type = "t3.xlarge"
-  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
-  source_dest_check = false 
-  ami = var.aws_amis[var.aws_region]
-  key_name = var.key_name
-  vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = aws_subnet.fortinet-calico-pub-subnet.id
-
-  ebs_block_device {
-    device_name = "/dev/sda1"
-    volume_size = "30"
-    volume_type = "standard"
-  }
-
-  provisioner "file" {
-    source      = "configs"
-    destination = "/home/ubuntu/calico-fortinet"
-  }
 
   provisioner "file" {
     source      = "demo"
