@@ -70,7 +70,11 @@ The basic workflow is:
     Then you can apply it:
 
     ```bash
-    kubectl create -f 5-fortimanager-firewall-config.yaml
+    # create namespace
+    kubectl create namespace tigera-firewall-controller
+    # create fortimanager controller configmap
+    FMGR_IP='<FortiManager_Private_IP>"
+    sed -e "s/10.99.1.X/$FMGR_IP/1" 5-fortimanager-firewall-config.yaml | kubectl create -f-
     ```
 
 3. **Create FortiManager API User and Key as Kubernetes Secrets.**
@@ -89,7 +93,7 @@ The basic workflow is:
     a. Download Fortinet integration manifest
 
     ```bash
-    curl -O https://docs.tigera.io/manifests/fortimanager.yaml
+    curl -O https://downloads.tigera.io/ee/v3.15.2/manifests/fortimanager.yaml
     ```
 
     b. Review the manifest and adjust if needed
@@ -104,6 +108,11 @@ The basic workflow is:
     c. Apply the manifest
 
     ```bash
+    # if tigera-pull-secret does not exist in the tigera-firewall-controller namespace
+    # create Tigera pull secret in FortiManager controller namespace
+    kubectl create secret generic tigera-pull-secret --type=kubernetes.io/dockerconfigjson -n tigera-firewall-controller --from-file=.dockerconfigjson=dockerjsonconfig.json
+
+    # deploy FortiManager controller manifest
     kubectl apply -f fortimanager.yaml
     ```
 
@@ -117,4 +126,6 @@ The basic workflow is:
     tigera-firewall-controller-ew-fortimanager-policies-ccc4f6f879j8f7   1/1     Running   0          1m
     ```
 
-[Next -> Module 13](../modules/deploy-app-1.md)
+[Module 9 :arrow_left:](../modules/deploy-app-0.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 13](../modules/deploy-app-1.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

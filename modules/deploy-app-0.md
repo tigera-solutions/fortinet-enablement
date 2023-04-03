@@ -43,19 +43,10 @@
       tier: fortigate
       order: 300
       selector: ''
-      namespaceSelector: ''
-      serviceAccountSelector: ''
       ingress:
         - action: Pass
-          source: {}
-          destination: {}
       egress:
         - action: Pass
-          source: {}
-          destination: {}
-      doNotTrack: false
-      applyOnForward: false
-      preDNAT: false
       types:
         - Ingress
         - Egress
@@ -68,19 +59,10 @@
       tier: fortimanager
       order: 300
       selector: ''
-      namespaceSelector: ''
-      serviceAccountSelector: ''
       ingress:
         - action: Pass
-          source: {}
-          destination: {}
       egress:
         - action: Pass
-          source: {}
-          destination: {}
-      doNotTrack: false
-      applyOnForward: false
-      preDNAT: false
       types:
         - Ingress
         - Egress
@@ -93,19 +75,10 @@
       tier: platform
       order: 300
       selector: ''
-      namespaceSelector: ''
-      serviceAccountSelector: ''
       ingress:
         - action: Pass
-          source: {}
-          destination: {}
       egress:
         - action: Pass
-          source: {}
-          destination: {}
-      doNotTrack: false
-      applyOnForward: false
-      preDNAT: false
       types:
         - Ingress
         - Egress
@@ -118,19 +91,10 @@
       tier: security
       order: 300
       selector: ''
-      namespaceSelector: ''
-      serviceAccountSelector: ''
       ingress:
         - action: Pass
-          source: {}
-          destination: {}
       egress:
         - action: Pass
-          source: {}
-          destination: {}
-      doNotTrack: false
-      applyOnForward: false
-      preDNAT: false
       types:
         - Ingress
         - Egress
@@ -142,15 +106,10 @@
     spec:
       tier: fortigate
       selector: app == "app-0"
-      namespaceSelector: ''
-      serviceAccountSelector: ''
       egress:
         - action: Allow
           source: {}
           destination: {}
-      doNotTrack: false
-      applyOnForward: false
-      preDNAT: false
       types:
         - Egress
     ```
@@ -196,4 +155,6 @@
     kubectl -n ns0 exec -t centos -- curl google.com
     ```
 
-[Next -> Module 12](../modules/integrate-calico-with-fortimanager.md)
+[Module 8 :arrow_left:](../modules/integrate-calico-fortigate.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 12](../modules/integrate-calico-with-fortimanager.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

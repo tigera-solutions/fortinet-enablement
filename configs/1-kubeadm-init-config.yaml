@@ -1,4 +1,4 @@
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 bootstrapTokens:
 - groups:
   - system:bootstrappers:kubeadm:default-node-token
@@ -9,42 +9,43 @@ bootstrapTokens:
   - authentication
 kind: InitConfiguration
 localAPIEndpoint:
+  #advertiseAddress: 10.99.1.170
   bindPort: 6443
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
+  criSocket: unix:///var/run/containerd/containerd.sock
+  imagePullPolicy: IfNotPresent
+  kubeletExtraArgs:
+    cloud-provider: aws
+    feature-gates: EphemeralContainers=true
   name: master                           # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
   taints:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
-  kubeletExtraArgs:
-    "feature-gates": "EphemeralContainers=true"
-    cloud-provider: aws
 ---
-apiVersion: kubeadm.k8s.io/v1beta2
+apiServer:
+  extraArgs:
+    cloud-provider: aws
+    feature-gates: EphemeralContainers=true
+  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-dns:
-  type: CoreDNS
+controllerManager:
+  extraArgs:
+    cloud-provider: aws
+    configure-cloud-routes: "false"
+    feature-gates: EphemeralContainers=true
+dns: {}
 etcd:
   local:
     dataDir: /var/lib/etcd
-imageRepository: k8s.gcr.io
+imageRepository: registry.k8s.io
 kind: ClusterConfiguration
-kubernetesVersion: v1.21.5
+kubernetesVersion: v1.26.3
 networking:
-  serviceSubnet: 192.168.0.0/16
-  podSubnet: 172.16.0.0/16
   dnsDomain: cluster.local
-apiServer:
-  timeoutForControlPlane: 4m0s
-  extraArgs:
-    "feature-gates": "EphemeralContainers=true"
-    cloud-provider: aws
+  podSubnet: 172.16.0.0/16
+  serviceSubnet: 192.168.0.0/16
 scheduler:
   extraArgs:
-    "feature-gates": "EphemeralContainers=true"
-controllerManager:
-  extraArgs:
-    "feature-gates": "EphemeralContainers=true"
-    cloud-provider: aws
-    configure-cloud-routes: "false"
+    feature-gates: EphemeralContainers=true

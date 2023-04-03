@@ -125,4 +125,6 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
 
 6. In the case the pod doesn't show as "Running". You can issue `kubectl describe pod <POD_NAME> -n tigera-firewall-controller` and `kubectl logs <POD_NAME> -n tigera-firewall-controller` to collect additional info on what issue you're hitting.
 
-[Next -> Module 9](../modules/deploy-app-0.md)
+[Module 7 :arrow_left:](../modules/installing-calico.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 9](../modules/deploy-app-0.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

@@ -32,22 +32,24 @@ variable "privatecidraz1" {
 variable "aws_amis" {
   default = {
     us-west-2 = "ami-0ceee60bcb94f60cd"
+    # Ubuntu 22.04 LTS
+    #us-west-2 = "ami-0fcf52bcf5db7b003"
   }
 }
 
-// AMIs are for FGTVM-AWS(PAYG) - 6.2.5
+// AMIs are for FGTVM-AWS(PAYG) - 7.2.4
 variable "fgtvmami" {
   type = map
   default = {
-    us-west-2= "ami-05cfe4f5761707079"
+    us-west-2= "ami-023d43c8c28258f24"
   }
 }
 
-// AMIs are for FMRVM-AWS(PAYG) - 6.4.4
+// AMIs are for FMRVM-AWS(PAYG) - 7.2.2
 variable "fmrvmami" {
   type = map
   default = {
-    us-west-2= "ami-08acdd33410d45c74"
+    us-west-2= "ami-0a33c724919ba3e16"
   }
 }
 

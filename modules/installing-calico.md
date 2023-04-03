@@ -4,9 +4,24 @@
 
 ## Steps
 
-Now it's time to install Calico Enterprise on this cluster. We will be following [these](https://docs.tigera.io/getting-started/kubernetes/self-managed-on-prem/generic-install) steps.
+Now it's time to install Calico Enterprise on this cluster. We will be following [these](https://docs.tigera.io/calico-enterprise/latest/getting-started/install-on-clusters/kubernetes/generic-install) steps.
 
-1. The first step is to set up cloud storage for Calico Enterprise. Since we're running on AWS, we can use the `2-ebs-storageclass.yaml` EBS Storage Class config. On the master node:
+1. The first step is to set up cloud storage for Calico Enterprise.
+
+    Since we're running on AWS and using a self-managed **kubeadm** cluster, we need to configure [AWS EBS CSI driver](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/install.md) for the cluster.
+
+    ```bash
+    # configure aws-secret to allow CIS driver access EBS storage
+    kubectl create secret generic aws-secret \
+    --namespace kube-system \
+    --from-literal "key_id=${AWS_ACCESS_KEY_ID}" \
+    --from-literal "access_key=${AWS_SECRET_ACCESS_KEY}"
+
+    # install CSI driver
+    kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.17"
+    ```
+
+    Then we can use the `2-ebs-storageclass.yaml` EBS Storage Class config. On the master node to configure the `storageClass` resource:
 
     ```bash
     $ cat 2-ebs-storage-class.yaml
@@ -33,8 +48,8 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 2. Now we can create the Tigera and Prometheus operators that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
 
     ```bash
-    kubectl create -f https://docs.tigera.io/manifests/tigera-operator.yaml
-    kubectl create -f https://docs.tigera.io/manifests/tigera-prometheus-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.15.2/manifests/tigera-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.15.2/manifests/tigera-prometheus-operator.yaml
     ```
 
 3. In order to install Calico Enterprise, you need a pull secret to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret. This file and the trial license key were provided to you previously and were copied to the `/home/ubuntu/calico-fortinet` directory.
@@ -46,10 +61,14 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
         --from-file=.dockerconfigjson=dockerjsonconfig.json
     ```
 
-4. Install the Tigera Custom Resources, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
+4. Download the Tigera Custom Resources manifest, adjust podNetwork setting to use IP CIDR configured for the kubeadm cluster, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
 
     ```bash
-    kubectl create -f https://docs.tigera.io/manifests/custom-resources.yaml
+    curl -s https://downloads.tigera.io/ee/v3.15.2/manifests/custom-resources.yaml | sed -e '/  # registry:.*$/a \
+      calicoNetwork:\
+        nodeAddressAutodetectionV4:\
+        ipPools: [{cidr: "172.16.0.0\/16",natOutgoing: "Enabled",encapsulation: "VXLAN"}]\
+    ' | kubectl apply -f-
     ```
 
     Watch `apiserver` component to become available before proceeding.
@@ -125,20 +144,13 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     tigera-manager-external   LoadBalancer   192.168.200.55   a86f00fcae2d44exxxxx.us-west-2.elb.amazonaws.com   443:31236/TCP   20h
     ```
 
-8. The final step is to enable Calico Enterprise security policies that will ensure that the various components of the product are secured.
-
-    ```bash
-    kubectl create -f https://docs.tigera.io/manifests/tigera-policies.yaml
-    ```
-
-9. We need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
+8. We need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
 
     ```bash
     # Creating a Calico Enterprise User called admin and its associated k8s Service Account
     kubectl create sa admin -n default
     kubectl create clusterrolebinding admin-access --clusterrole tigera-network-admin --serviceaccount default:admin
-    export calicoToken=$(kubectl get secret $(kubectl get serviceaccount admin -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep token) -o go-template='{{.data.token | base64decode}}' && echo)
-    echo $calicoToken
+    kubectl create token admin --duration=24h
 
     # Get the Kibana Login (Username is **elastic**)
     export elasticToken=$(kubectl get -n tigera-elasticsearch secret tigera-secure-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
@@ -148,13 +160,13 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
     Keep track of these two tokens as they will be used later on!
 
-10. Finally, you can login to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
+9. Finally, you can login to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
 
     >It can take a moment for the load balancer URL to become operational as AWS needs to pass a few checks on its side to enable traffic to the load balancer.
 
     ![img](../img/tigera-ui.png)
 
-11. If the URL is not loading after some time. Check if the `tigera-manager` pod is running on the `master` node.  If it is, go ahead and delete the pod so it can be rescheduled on another node. The reason this issue is seen is that the ELB doesn't forward to pods deployed on the `master` node since it's on the public subnet.
+10. If the URL is not loading after some time. Check if the `tigera-manager` pod is running on the `master` node.  If it is, go ahead and delete the pod so it can be rescheduled on another node. The reason this issue is seen is that the ELB doesn't forward to pods deployed on the `master` node since it's on the public subnet.
 
     ```text
     $ kubectl get pod -n tigera-manager -o wide
@@ -165,4 +177,19 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     $ kubectl delete pod -l k8s-app=tigera-manager -n tigera-manager
     ```
 
-[Next -> Module 8](../modules/integrate-calico-fortigate.md)
+11. _[Optional]_ Tune Felix component settings
+
+    >Felix is one of the Calico components through which one can tune various configuration parameters.
+
+    Let's adjust flow logs flushing interval, aggregation and TCP stats settings.
+
+    ```bash
+    kubectl patch felixconfiguration.p default -p '{"spec":{"flowLogsFlushInterval":"10s"}}'
+    kubectl patch felixconfiguration.p default -p '{"spec":{"flowLogsFileAggregationKindForAllowed":1}}'
+    kubectl patch felixconfiguration.p default -p '{"spec":{"dnsLogsFlushInterval":"10s"}}'
+    kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"flowLogsCollectTcpStats":true}}'
+    ```
+
+[Module 6 :arrow_left:](../modules/join-nodes.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 8](../modules/integrate-calico-fortigate.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

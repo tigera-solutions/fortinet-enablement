@@ -12,9 +12,9 @@ metadata:
   name: centos
   namespace: ns1
   labels:
-    name: centos
-    app: app-1
-    tigera.io/address-group: ns1-centos-address-group
+    app: centos
+    group: app-1
+    tigera.io/address-group: k8s-app-1-consumer
 spec:
   containers:
   - name: centos
@@ -31,13 +31,15 @@ metadata:
 spec:
   selector:
     matchLabels:
+      group: app-1
       app: app-1
   replicas: 2
   template:
     metadata:
       labels:
+        group: app-1
         app: app-1
-        tigera.io/address-group: app-1-address-group
+        tigera.io/address-group: k8s-app-1-service
     spec:
       containers:
       - name: nginx
@@ -54,13 +56,15 @@ metadata:
 spec:
   selector:
     matchLabels:
+      group: app-2
       app: app-2
   replicas: 2
   template:
     metadata:
       labels:
+        group: app-2
         app: app-2
-        tigera.io/address-group: app-2-address-group
+        tigera.io/address-group: k8s-app-2-service
     spec:
       containers:
       - name: nginx

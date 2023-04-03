@@ -1,6 +1,6 @@
 # Fortinet and Calico Solution Integration Enablement Workshop
 
-![intro](https://docs.projectcalico.org/images/intro/performance.png)
+![intro](https://docs.tigera.io/img/calico/intro/performance.png)
 
 ## Summary and Goals
 

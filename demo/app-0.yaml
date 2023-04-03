@@ -12,8 +12,8 @@ metadata:
   name: centos
   namespace: ns0
   labels:
-    name: centos
-    app: app-0
+    app: centos
+    group: app-0
 spec:
   containers:
   - name: centos
@@ -31,11 +31,15 @@ spec:
   selector:
     matchLabels:
       app: app-0
+      group: app-0
+      svc: nginx
   replicas: 1
   template:
     metadata:
       labels:
         app: app-0
+        group: app-0
+        svc: nginx
     spec:
       containers:
       - name: nginx
@@ -57,4 +61,4 @@ spec:
     targetPort: 80
     protocol: TCP
   selector:
-    app: nginx
+    svc: nginx
