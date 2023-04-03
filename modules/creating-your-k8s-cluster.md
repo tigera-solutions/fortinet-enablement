@@ -81,7 +81,7 @@ SERVICE CIDR == 192.168.0.0/16
       dataDir: /var/lib/etcd
     imageRepository: k8s.gcr.io
     kind: ClusterConfiguration
-    kubernetesVersion: v1.19.0
+    kubernetesVersion: v1.25.5
     networking:
     serviceSubnet: 192.168.0.0/16
     podSubnet: 172.16.0.0/16
@@ -101,7 +101,13 @@ SERVICE CIDR == 192.168.0.0/16
       configure-cloud-routes: "false"
     ```
 
-2. Now you can launch Kubernetes using `kubeadm` (on the `master` node)
+2. Pre-pull necessary images on the each node
+
+    ```bash
+    sudo kubeadm config images pull
+    ```
+
+3. Now you can launch Kubernetes using `kubeadm` (on the `master` node)
 
     ```bash
     $ sudo kubeadm init --config 1-kubeadm-init-config.yaml
@@ -213,4 +219,6 @@ SERVICE CIDR == 192.168.0.0/16
     echo -e "JOIN_TOKEN=$JOIN_TOKEN \nCERT_SHA=sha256:$CERT_HASH \nCONTROL_PLANE_IP=$CONTROL_PLANE_IP"
     ```
 
-[Next -> Module 6](../modules/join-nodes.md)
+[Module 4 :arrow_left:](../modules/accessing-your-k8s-nodes.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 6](../modules/join-nodes.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

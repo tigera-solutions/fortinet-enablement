@@ -43,4 +43,6 @@
     - In order to preserve any policies configured in FortiGate, we need to import FortiGate policies into FortiManager.
     - Once FortiGate policies are imported into FortiManager, from now on you can manage all North-South policies in FortiManager and push the package with the policies to FortiGate devices.
 
-[Next -> Module 12](../modules/integrate-calico-with-fortimanager.md)
+[Module 10 :arrow_left:](../modules/integrate-fortigate-fortimanager.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 12](../modules/integrate-calico-with-fortimanager.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

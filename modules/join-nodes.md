@@ -32,7 +32,7 @@
     #CONTROL_PLANE_IP=""
     #CERT_SHA=""
     HOST_NAME=$(hostname -f)
-    sed -i "s/MASTER_PRIVATE_IP/$CONTROL_PLANE_IP/1; s/sha256:.*\"/$CERT_SHA\"/1; s/name:\ ip.*$/name:\ $HOST_NAME/1" 1-kubeadm-join-config.yaml
+    sed -i "s/MASTER_PRIVATE_IP/$CONTROL_PLANE_IP/1; s/CERT_TOKEN/$CERT_SHA/1; s/name:\ worker/name:\ $HOST_NAME/1" 1-kubeadm-join-config.yaml
     ```
 
 2. Using the updated join configuration file, you can now join each of the nodes as follows:
@@ -41,7 +41,6 @@
     $ sudo kubeadm join --config=1-kubeadm-join-config.yaml
 
     [preflight] Running pre-flight checks
-          [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
     [preflight] Reading configuration from the cluster...
     [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
     [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
@@ -67,4 +66,6 @@
     ip-10-99-2-54.us-west-2.compute.internal        NotReady   master   16m     v1.19.2
     ```
 
-[Next -> Module 7](../modules/installing-calico.md)
+[Module 5 :arrow_left:](../modules/creating-your-k8s-cluster.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 7](../modules/installing-calico.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

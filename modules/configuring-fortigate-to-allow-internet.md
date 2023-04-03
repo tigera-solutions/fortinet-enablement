@@ -8,10 +8,12 @@ Goal: In this step, you will configure FortiGate firewall to act as the default 
 
 2. The default username is `admin` and the default password is the **EC2 Instance ID**. Once you log in, change the password. Then log in with the new password that you created.
 
-3. Navigate to **Policy and Objects** > **IPv4 Policy** *(or __Firewall Policy__)* then create a policy to allow ALL traffic from **Port 2** --> **Port 1**. This is required to ensure that traffic from the k8s cluster passes through the FortiGate firewall.
+3. Navigate to **Policy and Objects** > **Firewall Policy** *(or __IPv4 Policy__)* then create a policy to allow ALL traffic from **Port 2** --> **Port 1**. This is required to ensure that traffic from the k8s cluster passes through the FortiGate firewall.
 
 ![img1](../img/fortigate_policy_v2.png)
 
-![img2](../img/firewall_policy.png)
+![img2](../img/firewall_policy_v2.png)
 
-[Next -> Module 4](../modules/accessing-your-k8s-nodes.md)
+[Module 2 :arrow_left:](../modules/setting-up-aws.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 4](../modules/accessing-your-k8s-nodes.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

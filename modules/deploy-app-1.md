@@ -4,6 +4,8 @@
 
 ## Steps
 
+>If you haven't configured FortiGate integration and only intend to use FortiManager integration, then make sure that you apply `demo/tiers.yaml` manifest.
+
 1. Under the `demo` subdirectory, there is a `app-1.yaml` deployment file. Let's take a look at the `app-1.yaml`:
 
     ```yaml
@@ -21,9 +23,9 @@
       name: centos
       namespace: ns1
       labels:
-        name: centos
-        app: app-1
-        tigera.io/address-group: ns1-centos-address-group
+        app: centos
+        group: app-1
+        tigera.io/address-group: k8s-app-1-consumer
     spec:
       containers:
       - name: centos
@@ -40,13 +42,15 @@
     spec:
       selector:
         matchLabels:
+          group: app-1
           app: app-1
       replicas: 2
       template:
         metadata:
           labels:
+            group: app-1
             app: app-1
-            tigera.io/address-group: app-1-address-group
+            tigera.io/address-group: k8s-app-1-service
         spec:
           containers:
           - name: nginx
@@ -63,13 +67,15 @@
     spec:
       selector:
         matchLabels:
+          group: app-2
           app: app-2
       replicas: 2
       template:
         metadata:
           labels:
+            group: app-2
             app: app-2
-            tigera.io/address-group: app-2-address-group
+            tigera.io/address-group: k8s-app-2-service
         spec:
           containers:
           - name: nginx
@@ -109,12 +115,12 @@
         app: app-2
     ```
 
-    This deployment creates two sample `nginx` deployments in `ns1` called `app-1` and `app-2`, and a `centos` utility pod. Our goal here is to configure FortiManager Policy Packages to secure these two `nginx` applications using Calico Policies. You will notice that we have a label `tigera.io/address-group` that identifies which FortiManager Address Group this applications belong to. In our case the values are `app-1-address-group`, `app-2-address-group` and `ns1-centos-address-group`. Let's deploy the app:
+    This deployment creates two sample `nginx` deployments in `ns1` called `app-1` and `app-2`, and a `centos` utility pod. Our goal here is to configure FortiManager Policy Packages to secure these two `nginx` applications using Calico Policies. You will notice that we have a label `tigera.io/address-group` that identifies which FortiManager Address Group this applications belong to. In our case the values are `k8s-app-1-service`, `k8s-app-2-service` and `k8s-app-1-consumer`. Let's deploy the app:
 
 2. You deploy them:
 
     ```bash
-    kubectl apply -f app-1.yaml
+    kubectl apply -f demo/app-1.yaml
     ```
 
     Verify that the  application is deployed:
@@ -132,23 +138,23 @@
 
     >If you see any pods failing with status `ImagePullBackOff` or `ErrImagePull`, make sure that the previously configured FortiGate policy is not denying the traffic. You can either enable the policy to allow traffic, or order the `allow-internet` policy to be the first in the list in FortiGate.
 
-3. In the FortiManager portal, navigate to **Policy & Objects > Object Configurations > Firewall Objects > Create New > Address Group**. We need to create empty Address Groups: `app-1-address-group`, `app-2-address-group` and `ns1-centos-address-group`. When you select Members, ensure you search for `none` and select that option.
+3. In the FortiManager portal, navigate to **Policy & Objects > Object Configurations > Firewall Objects > Addresses > Create New > Address Group**. We need to create empty Address Groups: `k8s-app-1-service`, `k8s-app-2-service` and `k8s-app-1-consumer`. When you select Members, ensure you search for `none` and select that option.
 
     >Notice that Address Groups names you create in FortiManager should match the values provided for `tigera.io/address-group` label of the applications for which you want to create policies.
 
-    ![app-1-address-group.png](../img/app-1-address-group.png)
+    ![k8s-app-1-service.png](../img/k8s-app-1-service.png)
 
-4. Repeat the process for `app-2-address-group` and `ns1-centos-address-group`.
+4. Repeat the process for `k8s-app-2-service` and `k8s-app-1-consumer`.
 
-5. Now you will create a policy under the **Policy Packages**  tab in **calico-ew** package to secure the two applications. Create a policy to allow the `centos` pod with label `tigera.io/address-group: ns1-centos-address-group` to connect over HTTP to `nginx` pods with label `tigera.io/address-group: app-1-address-group`.
+5. Now you will create a policy under the **Policy Packages**  tab in **calico-ew** package to secure the two applications. Create a policy to allow the `centos` pod with label `tigera.io/address-group: k8s-app-1-consumer` to connect over HTTP to `nginx` pods with label `tigera.io/address-group: k8s-app-1-service`.
 
     >Make sure that the policy name does not contain a period (`.`) in it. Since the East-West policies get translated into Calico policies, the policy name must not have any period in its name.
 
     Click on **Create New** and fill the values as shown in the below image:
 
-    ![fortimanager-http-access-policy.png](../img/fortimanager-http-access-policy.png)
+    ![fortimanager-group-app-1-policy.png](../img/fortimanager-group-app-1-policy.png)
 
-    Repeat this step to allow the `centos` pod to connect over HTTP and ICMP to the `nginx` pods with label `tigera.io/address-group: app-2-address-group`.
+    Repeat this step to allow the `centos` pod to connect over HTTP and ICMP to the `nginx` pods with label `tigera.io/address-group: k8s-app-2-service`.
 
 6. Now you can validate that this policy was translated by Calico Enterprise integration controller into a Calico Network Policy and was added to the `fortimanager` Tier in Calico Enterprise.
 
@@ -162,15 +168,15 @@
 
     ```bash
     # get pod IP
-    POD_IP=$(kubectl -n ns1 get po -l app=app-1 -ojsonpath='{.items[0].status.podIP}')
+    POD_IP=$(kubectl -n ns1 get po -l group=app-1 -ojsonpath='{.items[0].status.podIP}')
     # text HTTP connection
-    kubectl -n ns1 exec -t centos -- curl $POD_IP
+    kubectl -n ns1 exec -t centos -- curl -m2 $POD_IP
     ```
 
     However, the connection between the `nginx` pods should be blocked as our policies do not allow it.
 
     ```bash
-    kubectl -n ns1 exec -t $(kubectl -n ns1 get po -l app=app-2 -ojsonpath='{.items[0].metadata.name}') -- curl $POD_IP
+    kubectl -n ns1 exec -t $(kubectl -n ns1 get po -l group=app-2 -ojsonpath='{.items[0].metadata.name}') -- curl -m2 $POD_IP
     ```
 
 8. Test connection using application Kubernetes service.
@@ -178,7 +184,7 @@
     a. Use Kubernetes service of one of the `nginx` applications to test the connection.
 
     ```bash
-    kubectl -n ns1 exec -t centos -- curl app-1-svc
+    kubectl -n ns1 exec -t centos -- curl -m2 app-1-svc
     ```
 
     This connection would not succeed if you don't have a policy allowing applications to access Kubernetes DNS component.
@@ -194,3 +200,7 @@
     >It is important to allow your applications to communicate with Kubernetes DNS service when the applications require connection over Kubernetes service.
 
 9. Congratulations! You have successfully completed all the labs.
+
+[Module 12 :arrow_left:](../modules/integrate-calico-with-fortimanager.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

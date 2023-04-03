@@ -88,4 +88,6 @@ To configure a Cloud9 instance, open AWS Console and navigate to Services > Clou
     |   `-- license.yaml
     ```
 
-[Next -> Module 2](../modules/setting-up-aws.md)
+[:arrow_right: Module 2](../modules/setting-up-aws.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

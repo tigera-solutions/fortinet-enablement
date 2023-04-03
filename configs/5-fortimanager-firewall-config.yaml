@@ -5,6 +5,14 @@ metadata:
   name: tigera-fortimanager-controller-configs
   namespace: tigera-firewall-controller
 data:
+  # must have fortigate section even if you don't use FG
+  tigera.firewall.fortigate: |-
+    # - name: fortigate
+    #   ip: 10.99.1.X   ####### UPDATE with FortiGate Private IP
+    #   apikey:
+    #     secretKeyRef:
+    #       name: fortigate
+    #       key: fortigate-key
   tigera.firewall.fortimanager-policies: |
     - name: fortimgr
       ip: 10.99.1.X   ####### UPDATE with FortiManager Private IP

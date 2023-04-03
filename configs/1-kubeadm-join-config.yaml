@@ -1,12 +1,20 @@
 ---
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 kind: JoinConfiguration
+caCertPath: /etc/kubernetes/pki/ca.crt
 discovery:
   bootstrapToken:
-    token: abcdef.0123456789abcdef                   
-    apiServerEndpoint: "MASTER_PRIVATE_IP:6443"      # UPDATE to reflect MASTER PRIVATE IP
-    caCertHashes: ["sha256:2a78c74c95db246c9d711276d1d0c9956cd36e765a1181519ab0f03a037488b6"]  # UPDATE based on kubeadm init output
+    apiServerEndpoint: MASTER_PRIVATE_IP:6443
+    caCertHashes: 
+    - CERT_TOKEN
+    token: abcdef.0123456789abcdef
+  timeout: 5m0s
+  tlsBootstrapToken: abcdef.0123456789abcdef
 nodeRegistration:
-  name: ip-10-99-2-177.us-west-2.compute.internal    # UPDATE with Full Hostname 
+  # criSocket: unix:///var/run/containerd/containerd.sock
+  criSocket: unix:///var/run/containerd/containerd.sock
+  imagePullPolicy: IfNotPresent
   kubeletExtraArgs:
     cloud-provider: aws
+  name: worker   # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
+  taints: null

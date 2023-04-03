@@ -77,4 +77,6 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     scp 1-kubeadm-join-config.yaml ubuntu@<WOERKER-2_IP>:/home/ubuntu
     ```
 
-[Next -> Module 5](../modules/creating-your-k8s-cluster.md)
+[Module 3 :arrow_left:](../modules/configuring-fortigate-to-allow-internet.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 5](../modules/creating-your-k8s-cluster.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

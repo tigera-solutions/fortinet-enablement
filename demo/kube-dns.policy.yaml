@@ -4,18 +4,12 @@ metadata:
   name: platform.allow-kube-dns
 spec:
   tier: platform
-  order: 200
+  order: 10
   selector: all()
   egress:
     - action: Allow
       source: {}
       destination:
         selector: k8s-app == "kube-dns"
-    - action: Pass
-      source: {}
-      destination: {}
-  doNotTrack: false
-  applyOnForward: false
-  preDNAT: false
   types:
     - Egress

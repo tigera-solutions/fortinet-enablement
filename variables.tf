@@ -32,6 +32,8 @@ variable "privatecidraz1" {
 variable "aws_amis" {
   default = {
     us-west-2 = "ami-0ceee60bcb94f60cd"
+    # Ubuntu 22.04 LTS
+    #us-west-2 = "ami-0fcf52bcf5db7b003"
   }
 }
 
@@ -40,6 +42,8 @@ variable "fgtvmami" {
   type = map
   default = {
     us-west-2= "ami-05cfe4f5761707079"
+    # FortiGate-VM64-AWSONDEMAND 7.2.4
+    #us-west-2= "ami-023d43c8c28258f24"
   }
 }
 
@@ -48,6 +52,8 @@ variable "fmrvmami" {
   type = map
   default = {
     us-west-2= "ami-08acdd33410d45c74"
+    # FortiManager VM64-AWSONDEMAND 7.2.2 w/ free trial
+    #us-west-2= "ami-0bda558c8e6199143"
   }
 }
 

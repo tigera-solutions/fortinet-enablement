@@ -22,4 +22,6 @@
 
     ![img](../img/fortigate_import_objects.png)
 
-[Next -> Module 11](../modules/manage-north-south-policies-with-fortimanager.md)
+[Module 9 :arrow_left:](../modules/deploy-app-0.md) &nbsp;&nbsp;&nbsp;&nbsp;[:arrow_right: Module 11](../modules/manage-north-south-policies-with-fortimanager.md)
+
+[:leftwards_arrow_with_hook: Back to Main](/README.md)

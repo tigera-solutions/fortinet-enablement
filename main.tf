@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -17,7 +17,7 @@ resource "aws_vpc" "fortinet-calico-vpc" {
   cidr_block = var.vpccidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  enable_classiclink   = false
+  #enable_classiclink   = false
   instance_tenancy     = "default"
   tags = {
     Name = "${var.resource_prefix}fortinet-calico-vpc"
@@ -287,10 +287,10 @@ resource "aws_instance" "fmrvm" {
   availability_zone = var.az1
   key_name          = var.key_name
 
-  root_block_device {
-    volume_type = "standard"
-    volume_size = "2"
-  }
+  # root_block_device {
+  #   volume_type = "standard"
+  #   volume_size = "2"
+  # }
 
   ebs_block_device {
     device_name = "/dev/sda1"
@@ -342,10 +342,10 @@ resource "aws_instance" "fgtvm" {
   key_name          = var.key_name
   user_data         = data.template_file.FortiGate.rendered
 
-  root_block_device {
-    volume_type = "standard"
-    volume_size = "2"
-  }
+  # root_block_device {
+  #   volume_type = "standard"
+  #   volume_size = "2"
+  # }
 
   ebs_block_device {
     device_name = "/dev/sda1"
