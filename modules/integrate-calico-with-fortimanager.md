@@ -26,7 +26,7 @@ The basic workflow is:
 
     a. Determine and note the CIDR’s or IP addresses of all Kubernetes nodes that can run the `tigera-firewall-controller`. This is required to explicitly allow the `tigera-firewall-controller` to access the FortiGate API. In our case, the CIDR is `10.99.0.0/16`
 
-    b. Go to FortiManager from your browser, from **System Settings**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`.
+    b. Go to FortiManager from your browser, from **System Settings** -> **Admin** -> **Profile**, create a new  profile named `tigera_api_user_profile` with `Read-Write` access for `Policy & Objects`.
 
     ![fortimanager_user_profile1.png](../img/fortimanager_user_profile1.png)
 
@@ -36,7 +36,7 @@ The basic workflow is:
 
     ![fortinet_package_calico_ew.png](../img/fortinet_package_calico_ew.png)
 
-    d. Under **System Settings** -> **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access. Specify CIDR or IP addresses of Kubernetes hosts in the `Trusted Hosts` field. In our case, it is `10.99.0.0/16`.
+    d. Under **System Settings** -> **Admin** -> **Administrators** tab, create a new user named `tigera_ew_fortimanager_admin` and associate this user with the `tigera_api_user_profile` profile. Make sure that you enable **All Packages** and **Read-Write** for the JSON API Access. Specify CIDR or IP addresses of Kubernetes hosts in the `Trusted Hosts` field. In our case, it is `10.99.0.0/16`.
 
     ![fortimanager_create_user_ew.png](../img/fortimanager_create_user_ew.png)
 
@@ -73,7 +73,7 @@ The basic workflow is:
     # create namespace
     kubectl create namespace tigera-firewall-controller
     # create fortimanager controller configmap
-    FMGR_IP='<FortiManager_Private_IP>"
+    FMGR_IP='<FortiManager_Private_IP>'
     sed -e "s/10.99.1.X/$FMGR_IP/1" 5-fortimanager-firewall-config.yaml | kubectl create -f-
     ```
 
