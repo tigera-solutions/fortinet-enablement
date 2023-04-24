@@ -26,7 +26,7 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
 
 3. On the `master` node, there is a script named `0-install-kubeadm.sh` under the`/home/ubuntu/calico-fortinet` directory. This script installs the following packages:
 
-    - Docker
+    - containerd
     - kubeadm
     - kubectl
     - kubeadm
@@ -59,11 +59,11 @@ Goal: In this module, you will access the k8s nodes and prep the installation of
     d. Verify that all necessary components were installed.
 
     ```bash
-    $ which kubelet kubectl docker calicoctl kubeadm
+    $ which kubelet kubectl containerd calicoctl kubeadm
     
     /usr/bin/kubelet
     /usr/bin/kubectl
-    /usr/bin/docker
+    /usr/bin/containerd
     /usr/bin/calicoctl
     /usr/bin/kubeadm
     ```

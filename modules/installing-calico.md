@@ -24,16 +24,13 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     Then we can use the `2-ebs-storageclass.yaml` EBS Storage Class config. On the master node to configure the `storageClass` resource:
 
     ```bash
-    $ cat 2-ebs-storage-class.yaml
+    $ cat 2-ebs-storageclass.yaml
 
     apiVersion: storage.k8s.io/v1
     kind: StorageClass
     metadata:
       name: tigera-elasticsearch
-    provisioner: kubernetes.io/aws-ebs
-    parameters:
-      type: gp2
-      fsType: ext4
+    provisioner: ebs.csi.aws.com
     reclaimPolicy: Retain
     allowVolumeExpansion: true
     volumeBindingMode: WaitForFirstConsumer
@@ -77,13 +74,15 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     $ watch kubectl get tigerastatus
 
     NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
-    apiserver             True        False         False      20h
-    calico                True        False         False      11h
-    compliance            False        False         False      11h
-    intrusion-detection   False        False         False      20h
-    log-collector         False        False         False      11h
-    log-storage           False        False         False      20h
-    manager               Fales        False         False      10h
+    apiserver             True        False         False      27s
+    calico                True        False         False      87s
+    compliance                                      True       
+    intrusion-detection                             True       
+    log-collector                                   True       
+    log-storage                                     True       
+    manager                                         True       
+    monitor               True        False         False      57s
+
     ```
 
 5. Configure Calico Enterprise license as follows ( assumes you saved your trial license as `license.yaml`)
@@ -99,13 +98,14 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     $ watch kubectl get tigerastatus
 
     NAME                  AVAILABLE   PROGRESSING   DEGRADED   SINCE
-    apiserver             True        False         False      20h
-    calico                True        False         False      11h
-    compliance            True        False         False      11h
-    intrusion-detection   True        False         False      20h
-    log-collector         True        False         False      11h
-    log-storage           True        False         False      20h
-    manager               True        False         False      10h
+    apiserver             True        False         False      4m27s
+    calico                True        False         False      5m27s
+    compliance            True        False         False      22s
+    intrusion-detection   True        False         False      27s
+    log-collector         True        False         False      22s
+    log-storage           True        False         False      22s
+    manager               True        False         False      2s
+    monitor               True        False         False      4m57s
     ```
 
 7. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP.

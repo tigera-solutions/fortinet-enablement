@@ -49,56 +49,56 @@ SERVICE CIDR == 192.168.0.0/16
     ```bash
     $ cat 1-kubeadm-init-config.yaml
 
-    apiVersion: kubeadm.k8s.io/v1beta2
+    apiVersion: kubeadm.k8s.io/v1beta3
     bootstrapTokens:
     - groups:
-    - system:bootstrappers:kubeadm:default-node-token
-    token: abcdef.0123456789abcdef
-    ttl: 24h0m0s
-    usages:
-    - signing
-    - authentication
+      - system:bootstrappers:kubeadm:default-node-token
+      token: abcdef.0123456789abcdef
+      ttl: 24h0m0s
+      usages:
+      - signing
+      - authentication
     kind: InitConfiguration
     localAPIEndpoint:
-    bindPort: 6443
+      bindPort: 6443
     nodeRegistration:
-    criSocket: /var/run/dockershim.sock
-    name: ip-10-99-1-X.us-west-2.compute.internal      # UPDATE THIS WITH THE MASTER FQDN
-    taints:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-    kubeletExtraArgs:
-      "feature-gates": "EphemeralContainers=true"
-      cloud-provider: aws
+      criSocket: unix:///var/run/containerd/containerd.sock
+      imagePullPolicy: IfNotPresent
+      kubeletExtraArgs:
+        cloud-provider: aws
+        feature-gates: EphemeralContainers=true
+      name: ip-10-99-1-X.us-west-2.compute.internal               # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
+      taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
     ---
-    apiVersion: kubeadm.k8s.io/v1beta2
+    apiServer:
+      extraArgs:
+        cloud-provider: aws
+        feature-gates: EphemeralContainers=true
+      timeoutForControlPlane: 4m0s
+    apiVersion: kubeadm.k8s.io/v1beta3
     certificatesDir: /etc/kubernetes/pki
     clusterName: kubernetes
-    dns:
-    type: CoreDNS
-    etcd:
-    local:
-      dataDir: /var/lib/etcd
-    imageRepository: k8s.gcr.io
-    kind: ClusterConfiguration
-    kubernetesVersion: v1.25.5
-    networking:
-    serviceSubnet: 192.168.0.0/16
-    podSubnet: 172.16.0.0/16
-    dnsDomain: cluster.local
-    apiServer:
-    timeoutForControlPlane: 4m0s
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-      cloud-provider: aws
-    scheduler:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
     controllerManager:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-      cloud-provider: aws
-      configure-cloud-routes: "false"
+      extraArgs:
+        cloud-provider: aws
+        configure-cloud-routes: "false"
+        feature-gates: EphemeralContainers=true
+    dns: {}
+    etcd:
+      local:
+        dataDir: /var/lib/etcd
+    imageRepository: registry.k8s.io
+    kind: ClusterConfiguration
+    kubernetesVersion: v1.26.3
+    networking:
+      dnsDomain: cluster.local
+      podSubnet: 172.16.0.0/16
+      serviceSubnet: 192.168.0.0/16
+    scheduler:
+      extraArgs:
+        feature-gates: EphemeralContainers=true
     ```
 
 2. Pre-pull necessary images on the each node
@@ -112,27 +112,23 @@ SERVICE CIDR == 192.168.0.0/16
     ```bash
     $ sudo kubeadm init --config 1-kubeadm-init-config.yaml
 
-    W0923 20:55:22.992192    8924 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
-    [init] Using Kubernetes version: v1.19.0
+    [init] Using Kubernetes version: v1.26.3
     [preflight] Running pre-flight checks
-            [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
-            [WARNING Hostname]: hostname "master" could not be reached
-            [WARNING Hostname]: hostname "master": lookup master on 127.0.0.53:53: server misbehaving
     [preflight] Pulling images required for setting up a Kubernetes cluster
     [preflight] This might take a minute or two, depending on the speed of your internet connection
     [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
     [certs] Using certificateDir folder "/etc/kubernetes/pki"
     [certs] Generating "ca" certificate and key
     [certs] Generating "apiserver" certificate and key
-    [certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local master] and IPs [192.168.0.1 10.99.1.203 54.200.135.157]
+    [certs] apiserver serving cert is signed for DNS names [ip-10-99-1-153.us-west-2.compute.internal kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [192.168.0.1 10.99.1.153]
     [certs] Generating "apiserver-kubelet-client" certificate and key
     [certs] Generating "front-proxy-ca" certificate and key
     [certs] Generating "front-proxy-client" certificate and key
     [certs] Generating "etcd/ca" certificate and key
     [certs] Generating "etcd/server" certificate and key
-    [certs] etcd/server serving cert is signed for DNS names [localhost master] and IPs [10.99.1.203 127.0.0.1 ::1]
+    [certs] etcd/server serving cert is signed for DNS names [ip-10-99-1-153.us-west-2.compute.internal localhost] and IPs [10.99.1.153 127.0.0.1 ::1]
     [certs] Generating "etcd/peer" certificate and key
-    [certs] etcd/peer serving cert is signed for DNS names [localhost master] and IPs [10.99.1.203 127.0.0.1 ::1]
+    [certs] etcd/peer serving cert is signed for DNS names [ip-10-99-1-153.us-west-2.compute.internal localhost] and IPs [10.99.1.153 127.0.0.1 ::1]
     [certs] Generating "etcd/healthcheck-client" certificate and key
     [certs] Generating "apiserver-etcd-client" certificate and key
     [certs] Generating "sa" key and public key
@@ -150,18 +146,18 @@ SERVICE CIDR == 192.168.0.0/16
     [control-plane] Creating static Pod manifest for "kube-scheduler"
     [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
     [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-    [apiclient] All control plane components are healthy after 11.002592 seconds
+    [apiclient] All control plane components are healthy after 7.004613 seconds
     [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-    [kubelet] Creating a ConfigMap "kubelet-config-1.19" in namespace kube-system with the configuration for the kubelets in the cluster
+    [kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
     [upload-certs] Skipping phase. Please see --upload-certs
-    [mark-control-plane] Marking the node master as control-plane by adding the label "node-role.kubernetes.io/master=''"
-    [mark-control-plane] Marking the node master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+    [mark-control-plane] Marking the node ip-10-99-1-153.us-west-2.compute.internal as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
+    [mark-control-plane] Marking the node ip-10-99-1-153.us-west-2.compute.internal as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
     [bootstrap-token] Using token: abcdef.0123456789abcdef
     [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
-    [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
-    [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
-    [bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
-    [bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+    [bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
+    [bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+    [bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+    [bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
     [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
     [kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
     [addons] Applied essential addon: CoreDNS
@@ -175,14 +171,18 @@ SERVICE CIDR == 192.168.0.0/16
       sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
       sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+    Alternatively, if you are the root user, you can run:
+
+      export KUBECONFIG=/etc/kubernetes/admin.conf
+
     You should now deploy a pod network to the cluster.
     Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
       https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
     Then you can join any number of worker nodes by running the following on each as root:
 
-    kubeadm join 10.99.1.203:6443 --token abcdef.0123456789abcdef \
-        --discovery-token-ca-cert-hash sha256:c211c95124bde99ce8f78ae4b5fc0058d0d49c847b73e34764f1ae05f205b1d4
+    kubeadm join 10.99.1.153:6443 --token abcdef.0123456789abcdef \
+            --discovery-token-ca-cert-hash sha256:9643ff1758f9b5741bb7153f136717a9aeaf36a862fa7e7bb073a82238cdab3f
     ```
 
     Note the `sha256` hash value as you will need it when joining the worker nodes to the cluster.
@@ -201,7 +201,7 @@ SERVICE CIDR == 192.168.0.0/16
     $ kubectl get nodes
 
     NAME                                        STATUS   ROLES    AGE   VERSION
-    ip-10-99-1-150.us-west-2.compute.internal   NotReady    master   20h   v1.19.3
+    ip-10-99-1-153.us-west-2.compute.internal   NotReady    master   10m   v1.26.3
     ```
 
 5. Collect settings to join worker nodes.
