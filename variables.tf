@@ -28,12 +28,13 @@ variable "privatecidraz1" {
   default = "10.99.2.0/24"
 }
 
-# Ubuntu 20.04 LTS (x64)
+# Ubuntu 22.04 LTS (x64)
 variable "aws_amis" {
   default = {
-    us-west-2 = "ami-0ceee60bcb94f60cd"
+    # Ubuntu 20.04 LTS
+    #us-west-2 = "ami-0ceee60bcb94f60cd"
     # Ubuntu 22.04 LTS
-    #us-west-2 = "ami-0fcf52bcf5db7b003"
+    us-west-2 = "ami-0e4a0595b254f1a4f"
   }
 }
 
