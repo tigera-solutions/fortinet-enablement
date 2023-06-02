@@ -119,8 +119,8 @@
 2. You deploy them:
 
     ```bash
-    kubectl apply -f tiers.yaml 
-    kubectl apply -f app-0.yaml
+    kubectl apply -f demo/tiers.yaml 
+    kubectl apply -f demo/app-0.yaml
     ```
 
     Verify that the  application is deployed:
