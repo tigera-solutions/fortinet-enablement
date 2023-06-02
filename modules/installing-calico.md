@@ -45,8 +45,8 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 2. Now we can create the Tigera and Prometheus operators that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
 
     ```bash
-    kubectl create -f https://downloads.tigera.io/ee/v3.15.2/manifests/tigera-operator.yaml
-    kubectl create -f https://downloads.tigera.io/ee/v3.15.2/manifests/tigera-prometheus-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.15.3/manifests/tigera-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.15.3/manifests/tigera-prometheus-operator.yaml
     ```
 
 3. In order to install Calico Enterprise, you need a pull secret to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret. This file and the trial license key were provided to you previously and were copied to the `/home/ubuntu/calico-fortinet` directory.
@@ -61,8 +61,9 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 4. Download the Tigera Custom Resources manifest, adjust podNetwork setting to use IP CIDR configured for the kubeadm cluster, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
 
     ```bash
-    curl -s https://downloads.tigera.io/ee/v3.15.2/manifests/custom-resources.yaml | sed -e '/  # registry:.*$/a \
+    curl -s https://downloads.tigera.io/ee/v3.15.3/manifests/custom-resources.yaml | sed -e '/  # registry:.*$/a \
       calicoNetwork:\
+        bgp: Disabled\
         nodeAddressAutodetectionV4:\
         ipPools: [{cidr: "172.16.0.0\/16",natOutgoing: "Enabled",encapsulation: "VXLAN"}]\
     ' | kubectl apply -f-
