@@ -3,5 +3,6 @@
 *.tfstate
 *.tfstate.backup
 *.tfvars
+*.kubeconfig
 configs/license.yaml
 configs/dockerjsonconfig.json
