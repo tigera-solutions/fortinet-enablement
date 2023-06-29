@@ -93,7 +93,7 @@ The basic workflow is:
     a. Download Fortinet integration manifest
 
     ```bash
-    curl -O https://downloads.tigera.io/ee/v3.15.3/manifests/fortimanager.yaml
+    curl -O https://downloads.tigera.io/ee/v3.16.3/manifests/fortimanager.yaml
     ```
 
     b. Review the manifest and adjust if needed

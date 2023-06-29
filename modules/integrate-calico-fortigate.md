@@ -105,7 +105,7 @@ If source address selection is `node`, then populates the Kubernetes node IPs of
     b. Download Fortinet integration manifest
 
     ```bash
-    curl -O https://downloads.tigera.io/ee/v3.15.3/manifests/fortinet.yaml
+    curl -O https://downloads.tigera.io/ee/v3.16.3/manifests/fortinet.yaml
     ```
 
     c. Review and apply the manifest
