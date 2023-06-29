@@ -14,13 +14,13 @@ Goal: this module sets up your AWS environment using Terraform.
 
     >If you don't have AWS Key Pair created, you can either [create a new key pair or import existing key](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#prepare-key-pair) into AWS.
 
-2. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 20.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly.
+2. **If you're using `us-west-2` region, skip this step.** Ensure that the correct AMI for your region is present in `variables.tf` for `aws_amis` , `fgtvmami` and `fmrvmami` variables. We will use **Ubuntu 22.04 LTS** image. You can use [this](http://cloud-images.ubuntu.com/locator/ec2/) site to find the right AMI matching. Please note that if you intend to use a different region other than `us-west-2`, you need to add the AMIs accordingly.
 
     ```yaml
-        # Ubuntu 20.04 LTS (x64)
+        # Ubuntu 22.04 LTS (x64)
         variable "aws_amis" {
             default = {
-                us-west-2 = "ami-01a5f3ee4a9903e77"
+                us-west-2 = "ami-0e4a0595b254f1a4f"
             }
         }
     ```
