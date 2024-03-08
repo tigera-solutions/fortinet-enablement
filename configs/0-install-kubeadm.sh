@@ -1,19 +1,26 @@
 #!/bin/bash
 set -e
 
-KUBERNETES_VERSION=1.26.3-00
-CALICO_VERSION=3.15.2
+KUBERNETES_VERSION=1.28
+CALICO_VERSION=3.18.1
 
 # Installing all required packages to run Kubeadm
-sudo apt-get update && sudo apt-get install -y apt-transport-https curl
-sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl ca-certificates gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v${KUBERNETES_VERSION}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+# sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${KUBERNETES_VERSION}/deb/ /
 EOF
 
 sudo apt-get update
-sudo apt-get install --allow-downgrades -y kubelet=$KUBERNETES_VERSION kubeadm=$KUBERNETES_VERSION kubectl=$KUBERNETES_VERSION 
+sudo apt-get install --allow-downgrades -y kubelet kubeadm kubectl 
 sudo apt-mark hold kubelet kubeadm kubectl
+
+# configure --cloud-provider setting for kubelet
+cat <<EOF | sudo tee /etc/default/kubelet
+KUBELET_EXTRA_ARGS=--cloud-provider=external
+EOF
 
 # Installing calicoctl
 sudo curl -O -L  https://downloads.tigera.io/ee/binaries/v$CALICO_VERSION/calicoctl && sudo chmod +x calicoctl && sudo mv calicoctl /usr/bin
@@ -66,5 +73,7 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/1' /etc/containerd/con
 sudo systemctl restart containerd
 # get containerd status
 sudo systemctl status containerd
+# restart kublet
+sudo systemctl restart kubelet
 # reload systemctl daemon
 sudo systemctl daemon-reload

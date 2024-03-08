@@ -41,7 +41,8 @@ SERVICE CIDR == 192.168.0.0/16
     b. Configure node's hostname in `1-kubeadm-init-config.yaml` configuration file.
 
     ```bash
-    sed -i "s/name:\ master/name:\ $(hostname -f)/1" 1-kubeadm-init-config.yaml
+    K8S_VERSION=$(kubeadm version -oshort)
+    sed -i "s/name:\ master/name:\ $(hostname -f)/1; s/kubernetesVersion:.*$/kubernetesVersion: ${K8S_VERSION}/1" 1-kubeadm-init-config.yaml
     ```
 
     Example configuration:

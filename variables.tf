@@ -50,7 +50,10 @@ variable "fgtvmami" {
 variable "fmrvmami" {
   type = map
   default = {
-    us-west-2= "ami-0a33c724919ba3e16"
+    # FMR 7.2.2
+    #us-west-2= "ami-0a33c724919ba3e16"
+    # FMR 7.2.4 - max 2 devices
+    us-west-2= "ami-01c72f99d816c6f48"
   }
 }
 

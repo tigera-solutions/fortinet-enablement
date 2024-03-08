@@ -15,6 +15,6 @@ nodeRegistration:
   criSocket: unix:///var/run/containerd/containerd.sock
   imagePullPolicy: IfNotPresent
   kubeletExtraArgs:
-    cloud-provider: aws
+    cloud-provider: external
   name: worker   # UPDATE with the full AWS DNS name e.g ip-10-99-2-246.us-west-2.compute.internal
   taints: null

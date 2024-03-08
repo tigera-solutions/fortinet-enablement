@@ -18,7 +18,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     --from-literal "access_key=${AWS_SECRET_ACCESS_KEY}"
 
     # install CSI driver
-    kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.20"
+    kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.28"
     ```
 
     Then we can use the `2-ebs-storageclass.yaml` EBS Storage Class config. On the master node to configure the `storageClass` resource:
@@ -45,23 +45,39 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 2. Now we can create the Tigera and Prometheus operators that will create the proper CRDs, RBAC, services needed for Calico Enterprise.
 
     ```bash
-    kubectl create -f https://downloads.tigera.io/ee/v3.16.3/manifests/tigera-operator.yaml
-    kubectl create -f https://downloads.tigera.io/ee/v3.16.3/manifests/tigera-prometheus-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.18.1/manifests/tigera-operator.yaml
+    kubectl create -f https://downloads.tigera.io/ee/v3.18.1/manifests/tigera-prometheus-operator.yaml
     ```
 
-3. In order to install Calico Enterprise, you need a pull secret to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret. This file and the trial license key were provided to you previously and were copied to the `/home/ubuntu/calico-fortinet` directory.
+3. Configure cloud controller manager for AWS.
+
+    This allows LoadBalancer type services to be created in AWS Kubernetes clusters.
+
+    ```bash
+    kubectl apply -k 'github.com/kubernetes/cloud-provider-aws/examples/existing-cluster/base/?ref=master'
+    ```
+
+    >If the `kube-system/aws-cloud-controller-manager-*` pod doesn't get created after you apply `custom-resources.yaml` in step 5, make sure that the control-plane node has the `node-role.kubernetes.io/control-plane:NoSchedule` taint and doesn't include `node-role.kubernetes.io/master:NoSchedule` taint.
+
+4. In order to install Calico Enterprise, you need a pull secret to be able to pull the images and a license key. In this step we will install the `dockerjsonconfig` as a pull secret. This file and the trial license key were provided to you previously and were copied to the `/home/ubuntu/calico-fortinet` directory.
 
     ```bash
     # run this command from within /calico-fortinet path
     kubectl create secret generic tigera-pull-secret \
         --type=kubernetes.io/dockerconfigjson -n tigera-operator \
         --from-file=.dockerconfigjson=dockerjsonconfig.json
+
+    kubectl create secret generic tigera-pull-secret \
+        --type=kubernetes.io/dockerconfigjson -n tigera-prometheus \
+        --from-file=.dockerconfigjson=dockerjsonconfig.json
+    kubectl patch deployment -n tigera-prometheus calico-prometheus-operator \
+        -p '{"spec":{"template":{"spec":{"imagePullSecrets":[{"name": "tigera-pull-secret"}]}}}}'
     ```
 
-4. Download the Tigera Custom Resources manifest, adjust podNetwork setting to use IP CIDR configured for the kubeadm cluster, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
+5. Download the Tigera Custom Resources manifest, adjust podNetwork setting to use IP CIDR configured for the kubeadm cluster, then watch `tigerastatus` resource to make sure the API server is `available` before moving to the next step.
 
     ```bash
-    curl -s https://downloads.tigera.io/ee/v3.16.3/manifests/custom-resources.yaml | sed -e '/  # registry:.*$/a \
+    curl -s https://downloads.tigera.io/ee/v3.18.1/manifests/custom-resources.yaml | sed -e '/  # registry:.*$/a \
       calicoNetwork:\
         bgp: Disabled\
         nodeAddressAutodetectionV4:\
@@ -86,14 +102,14 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
     ```
 
-5. Configure Calico Enterprise license as follows ( assumes you saved your trial license as `license.yaml`)
+6. Configure Calico Enterprise license as follows ( assumes you saved your trial license as `license.yaml`)
 
     ```bash
     # run this command from within /calico-fortinet path
     kubectl create -f license.yaml
     ```
 
-6. Finally, watch `tigerastatus` resource to ensure that the `apiserver`,`calico`, `log-storage`, and `manager` components of Calico Enterprise report their availability status as `True`. This would mean that the Calico CNI and the enterprise components work as expected. This step may take some time...
+7. Finally, watch `tigerastatus` resource to ensure that the `apiserver`,`calico`, `log-storage`, and `manager` components of Calico Enterprise report their availability status as `True`. This would mean that the Calico CNI and the enterprise components work as expected. This step may take some time...
 
     ```bash
     $ watch kubectl get tigerastatus
@@ -109,7 +125,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     monitor               True        False         False      4m57s
     ```
 
-7. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP.
+8. It's time now to expose Calico Enterprise UI externally using the `03-loadbalancer.yaml` `LoadBalancer` service. It will automatically created an AWS ELB to front Calico Enterprise using a public IP.
 
     ```text
     $ cat 3-loadbalancer.yaml
@@ -145,7 +161,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     tigera-manager-external   LoadBalancer   192.168.200.55   a86f00fcae2d44exxxxx.us-west-2.elb.amazonaws.com   443:31236/TCP   20h
     ```
 
-8. We need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
+9. We need to create a user account to be able to log into Calico Enterprise and retrieve the access token to be able to log into the Kibana dashboard.
 
     ```bash
     # Creating a Calico Enterprise User called admin and its associated k8s Service Account
@@ -161,13 +177,13 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
 
     Keep track of these two tokens as they will be used later on!
 
-9. Finally, you can login to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
+10. Finally, you can login to the Calico Enterprise UI using the loadbalancer and user auth token provided above.
 
     >It can take a moment for the load balancer URL to become operational as AWS needs to pass a few checks on its side to enable traffic to the load balancer.
 
     ![img](../img/tigera-ui.png)
 
-10. If the URL is not loading after some time. Check if the `tigera-manager` pod is running on the `master` node.  If it is, go ahead and delete the pod so it can be rescheduled on another node. The reason this issue is seen is that the ELB doesn't forward to pods deployed on the `master` node since it's on the public subnet.
+11. If the URL is not loading after some time. Check if the `tigera-manager` pod is running on the `master` node.  If it is, go ahead and delete the pod so it can be rescheduled on another node. The reason this issue is seen is that the ELB doesn't forward to pods deployed on the `master` node since it's on the public subnet.
 
     ```text
     $ kubectl get pod -n tigera-manager -o wide
@@ -178,7 +194,7 @@ Now it's time to install Calico Enterprise on this cluster. We will be following
     $ kubectl delete pod -l k8s-app=tigera-manager -n tigera-manager
     ```
 
-11. _[Optional]_ Tune Felix component settings
+12. _[Optional]_ Tune Felix component settings
 
     >Felix is one of the Calico components through which one can tune various configuration parameters.
 
